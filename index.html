@@ -1,0 +1,891 @@
+Try me!
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhiskerWise Veterinaria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container"><h1 class="main-title title-font">WHISKERWISE</h1></div>
+                <p class="subtitle subtitle-font text-center">Sabiduría y cuidado para tus mascotas 🐾❤️</p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-dark">
+                        <h3 class="mb-1 accent-font"><i class="bi bi-telephone-fill" style="color: var(--secondary-color);"></i> 24/7 Emergencias Veterinarias</h3>
+                        <p class="mb-0 accent-font">Donde el cuidado se encuentra con la sabiduría</p>
+                    </div>
+                    <button class="btn btn-light accent-font" id="btnNuevaCita"><i class="bi bi-plus-circle" style="color: var(--secondary-color);"></i> Nueva Cita</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="filtros-container">
+            <div class="filtros-dropdown">
+                <button class="menu-toggle accent-font" id="menuToggle"><div class="menu-icon"><span></span><span></span><span></span></div> Filtrar por estado</button>
+                <div class="dropdown-content" id="dropdownFiltros">
+                    <button class="btn btn-outline-primary active accent-font" data-estado="todas"><i class="bi bi-list" style="color: var(--primary-color);"></i> Todas las citas</button>
+                    <button class="btn btn-outline-primary accent-font" data-estado="abierta"><i class="bi bi-clock" style="color: var(--primary-color);"></i> Abiertas</button>
+                    <button class="btn btn-outline-success accent-font" data-estado="terminada"><i class="bi bi-check-circle" style="color: var(--success-color);"></i> Terminadas</button>
+                    <button class="btn btn-outline-danger accent-font" data-estado="anulada"><i class="bi bi-x-circle" style="color: var(--danger-color);"></i> Anuladas</button>
+                </div>
+            </div>
+            <div class="filtro-activo accent-font" id="filtroActivo"><i class="bi bi-list" style="color: var(--text-color);"></i><span>Todas las citas</span></div>
+        </div>
+        
+        <div class="resumen-container">
+            <div class="resumen-item resumen-total"><div class="resumen-titulo accent-font">Total</div><div class="resumen-valor title-font" id="totalCitas">0</div></div>
+            <div class="resumen-item resumen-abiertas"><div class="resumen-titulo accent-font">Abiertas</div><div class="resumen-valor title-font" id="abiertasCitas">0</div></div>
+            <div class="resumen-item resumen-terminadas"><div class="resumen-titulo accent-font">Terminadas</div><div class="resumen-valor title-font" id="terminadasCitas">0</div></div>
+            <div class="resumen-item resumen-anuladas"><div class="resumen-titulo accent-font">Anuladas</div><div class="resumen-valor title-font" id="anuladasCitas">0</div></div>
+        </div>
+        
+        <div class="row"><div class="col-12"><div class="card"><div class="card-body"><h5 class="card-title title-font"><i class="bi bi-calendar-heart" style="color: var(--secondary-color);"></i> Citas Agendadas</h5><div class="citas-container" id="listaCitas"><div class="empty-state"><i class="bi bi-calendar-x"></i><h4 class="title-font">No hay citas programadas</h4><p class="accent-font">Comienza agregando una nueva cita usando el botón "Nueva Cita"</p></div></div></div></div></div></div>
+    </main>
+    
+    <div class="modal fade" id="modalCita" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title title-font" id="modalCitaLabel"><i class="bi bi-calendar-plus" style="color: var(--text-color);"></i> Agendar Nueva Cita</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="formCita">
+                        <input type="hidden" id="citaId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3"><label for="nombreMascota" class="form-label required accent-font">Nombre Mascota</label><input type="text" class="form-control" id="nombreMascota"><div class="validation-message accent-font" id="error-nombreMascota">El nombre de la mascota es requerido.</div></div>
+                            <div class="col-md-6 mb-3"><label for="tipoMascota" class="form-label required accent-font">Tipo de mascota</label>
+                                <select class="form-control" id="tipoMascota">
+                                    <option value="">Seleccione un tipo</option><option value="Perro">🐶 Perro</option><option value="Gato">🐱 Gato</option><option value="Conejo">🐰 Conejo</option>
+                                    <option value="Hamster">🐹 Hámster</option><option value="Pájaro">🐦 Pájaro</option><option value="Tortuga">🐢 Tortuga</option>
+                                    <option value="Pez">🐠 Pez</option><option value="Hurón">🦡 Hurón</option><option value="Cobaya">🐭 Cobaya</option>
+                                    <option value="Iguana">🦎 Iguana</option><option value="Otro">❓ Otro</option>
+                                </select>
+                                <div class="validation-message accent-font" id="error-tipoMascota">El tipo de mascota es requerido.</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3"><label for="nombrePropietario" class="form-label required accent-font">Propietario</label><input type="text" class="form-control" id="nombrePropietario"><div class="validation-message accent-font" id="error-nombrePropietario">El nombre del propietario es requerido.</div></div>
+                            <div class="col-md-6 mb-3"><label for="telefono" class="form-label required accent-font">Teléfono</label><input type="text" class="form-control" id="telefono"><div class="validation-message accent-font" id="error-telefono">El teléfono es requerido.</div></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3"><label for="fechaCita" class="form-label required accent-font">Fecha de cita</label><input type="date" class="form-control" id="fechaCita"><div class="validation-message accent-font" id="error-fechaCita">La fecha de la cita es requerida y debe ser posterior a la fecha actual.</div></div>
+                            <div class="col-md-6 mb-3"><label for="horaCita" class="form-label required accent-font">Hora de cita</label><select class="form-select" id="horaCita"><option value="">Seleccione una hora</option></select><div class="validation-message accent-font" id="error-horaCita">Debe seleccionar un horario.</div></div>
+                        </div>
+                        <div class="mb-3"><label for="sintomas" class="form-label required accent-font">Síntomas</label><textarea class="form-control" id="sintomas" rows="3" placeholder="Describa los síntomas que presenta la mascota"></textarea><div class="validation-message accent-font" id="error-sintomas">Los síntomas son requeridos.</div></div>
+                        <div class="mb-3" id="estadoContainer" style="display: none;"><label for="estadoCita" class="form-label accent-font">Estado de la cita</label><select class="form-control" id="estadoCita"><option value="abierta">Abierta</option><option value="terminada">Terminada</option><option value="anulada">Anulada</option></select></div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary accent-font" data-bs-dismiss="modal">CERRAR</button><button type="button" class="btn btn-primary accent-font" id="btnGuardarCita">GUARDAR CITA</button></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--danger-color), #E53935); color: white;"><h5 class="modal-title title-font" id="modalConfirmarEliminarLabel"><i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <div class="alert alert-warning"><i class="bi bi-exclamation-triangle-fill"></i><strong>¿Está seguro que desea eliminar esta cita?</strong><p class="mb-0 mt-2">Esta acción no se puede deshacer. La cita será eliminada permanentemente del sistema.</p></div>
+                    <div class="mt-3"><p class="accent-font"><i class="bi bi-info-circle"></i> Esta acción eliminará todos los datos de la cita seleccionada.</p></div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary accent-font" data-bs-dismiss="modal">CANCELAR</button><button type="button" class="btn btn-danger accent-font" id="btnConfirmarEliminar">ELIMINAR DEFINITIVAMENTE</button></div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p class="mb-1 title-font"><strong>WHISKERWISE VETERINARIA</strong></p>
+            <p class="mb-2 subtitle-font">Sabiduría en cada cuidado, amor en cada mascota 🐕🐈</p>
+            <p class="mb-0 accent-font">Administrador de Citas Veterinarias &copy; <span id="currentYear"></span> | <a href="https://jagues6.com" target="_blank">Derechos reservados a Jagues6</a></p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variables globales
+        let citas = [];
+        let citaAEditar = null;
+        let citaAEliminar = null;
+        let filtroActual = 'todas';
+        
+        // Constantes para imágenes y iconos
+        const animalGifs = {
+            'Perro': 'https://i.pinimg.com/originals/4e/4f/24/4e4f24dd59eeee057dcd2a53eb8d170a.gif',
+            'Gato': 'https://img1.picmix.com/output/stamp/normal/7/3/4/8/1968437_c6c64.gif',
+            'Conejo': 'https://usagif.com/wp-content/uploads/gifs/dancing-rabbit-22.gif',
+            'Hamster': 'https://usagif.com/wp-content/uploads/gifs/hamster-71.gif',
+            'Pájaro': 'https://img1.picmix.com/output/stamp/normal/1/0/8/4/324801_da9ed.gif',
+            'Tortuga': 'https://i.pinimg.com/originals/87/84/a2/8784a2a12fe1341c46e5ff640c6094ae.gif',
+            'Pez': 'https://es-wiki.metin2.gameforge.com/images/f/f7/Peces_animados.gif',
+            'Hurón': 'https://www.gifsanimados.org/data/media/497/huron-imagen-animada-0057.gif',
+            'Cobaya': 'https://www.gifsanimados.org/data/media/1236/cobaya-y-conejillo-de-indias-imagen-animada-0040.gif',
+            'Iguana': 'https://i.pinimg.com/originals/75/90/2a/75902a0a864708e6198f07c33faabdee.gif',
+            'Otro': 'https://img1.picmix.com/output/stamp/normal/1/0/8/4/324801_da9ed.gif'
+        };
+        
+        const animalIcons = {
+            'Perro': 'bi-dog', 'Gato': 'bi-cat', 'Conejo': 'bi-bug', 'Hamster': 'bi-bug',
+            'Pájaro': 'bi-bug', 'Tortuga': 'bi-bug', 'Pez': 'bi-bug', 'Hurón': 'bi-bug',
+            'Cobaya': 'bi-bug', 'Iguana': 'bi-bug', 'Otro': 'bi-bug'
+        };
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarCitas();
+            inicializarEventos();
+            actualizarResumen();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            const fechaInput = document.getElementById('fechaCita');
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            fechaInput.min = tomorrow.toISOString().split('T')[0];
+            fechaInput.addEventListener('input', validarFechaCita);
+        });
+        
+        // Funciones de almacenamiento
+        function cargarCitas() {
+            const citasGuardadas = localStorage.getItem('citasVeterinarias');
+            if (citasGuardadas) {
+                citas = JSON.parse(citasGuardadas);
+            } else {
+                citas = [
+                    { id: 1, nombreMascota: "Pelusa", tipoMascota: "Gato", nombrePropietario: "Marco Luna", telefono: "457567567567", fecha: "2026-02-01", hora: "15:30", sintomas: "sin apetito, letárgico", estado: "abierta" },
+                    { id: 2, nombreMascota: "Max", tipoMascota: "Perro", nombrePropietario: "Ana García", telefono: "5551234567", fecha: "2026-02-03", hora: "10:00", sintomas: "tos constante", estado: "abierta" },
+                    { id: 3, nombreMascota: "Coco", tipoMascota: "Loro", nombrePropietario: "Luis Rodríguez", telefono: "5559876543", fecha: "2026-02-02", hora: "14:00", sintomas: "plumas caídas", estado: "terminada" },
+                    { id: 4, nombreMascota: "Bugs", tipoMascota: "Conejo", nombrePropietario: "Carlos Méndez", telefono: "5554567890", fecha: "2026-02-04", hora: "11:30", sintomas: "no come zanahorias", estado: "abierta" },
+                    { id: 5, nombreMascota: "Nemo", tipoMascota: "Pez", nombrePropietario: "Sofía López", telefono: "5553216549", fecha: "2026-02-01", hora: "16:00", sintomas: "nada de lado", estado: "anulada" },
+                    { id: 6, nombreMascota: "Rex", tipoMascota: "Perro", nombrePropietario: "Pedro Sánchez", telefono: "5557418529", fecha: "2026-02-05", hora: "09:00", sintomas: "cojea pata trasera", estado: "abierta" }
+                ];
+                guardarCitas();
+            }
+            mostrarCitas();
+        }
+        
+        function guardarCitas() {
+            localStorage.setItem('citasVeterinarias', JSON.stringify(citas));
+        }
+        
+        // Eventos principales
+        function inicializarEventos() {
+            document.getElementById('btnNuevaCita').addEventListener('click', mostrarModalNuevaCita);
+            document.getElementById('btnGuardarCita').addEventListener('click', guardarCita);
+            
+            // Toggle menú de filtros
+            document.getElementById('menuToggle').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('dropdownFiltros').classList.toggle('show');
+            });
+            
+            // Cerrar dropdowns al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                const dropdown = document.getElementById('dropdownFiltros');
+                const menuToggle = document.getElementById('menuToggle');
+                
+                if (!dropdown.contains(e.target) && !menuToggle.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+                
+                document.querySelectorAll('.dropdown-estado-content').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            });
+            
+            // Filtros
+            document.querySelectorAll('#dropdownFiltros .btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#dropdownFiltros .btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    filtroActual = this.getAttribute('data-estado');
+                    
+                    const filtroActivo = document.getElementById('filtroActivo');
+                    const icono = this.querySelector('i').className;
+                    const texto = this.textContent.trim();
+                    
+                    filtroActivo.innerHTML = `<i class="${icono}"></i><span>${texto}</span>`;
+                    document.getElementById('dropdownFiltros').classList.remove('show');
+                    mostrarCitas();
+                });
+            });
+            
+            document.getElementById('fechaCita').addEventListener('change', generarHorariosDisponibles);
+            
+            // Validaciones en tiempo real
+            document.querySelectorAll('#formCita input, #formCita select, #formCita textarea').forEach(input => {
+                input.addEventListener('input', function() {
+                    validarCampo(this);
+                    if (this.id === 'telefono' && this.value.trim() !== '' && !/^[0-9]+$/.test(this.value.trim())) {
+                        this.classList.add('is-invalid');
+                        document.getElementById('error-telefono').textContent = 'El teléfono debe contener solo números';
+                        document.getElementById('error-telefono').classList.add('show');
+                    }
+                });
+                
+                input.addEventListener('change', function() {
+                    validarCampo(this);
+                });
+            });
+        }
+        
+        function validarCampo(elemento) {
+            const errorId = 'error-' + elemento.id;
+            const errorElement = document.getElementById(errorId);
+            
+            if (elemento.value.trim() === '' || (elemento.tagName === 'SELECT' && elemento.value === '')) {
+                elemento.classList.add('is-invalid');
+                if (errorElement) {
+                    errorElement.textContent = 'Este campo es requerido';
+                    errorElement.classList.add('show');
+                }
+            } else {
+                elemento.classList.remove('is-invalid');
+                if (errorElement) {
+                    errorElement.classList.remove('show');
+                }
+            }
+        }
+        
+        function validarFechaCita() {
+            const fechaInput = document.getElementById('fechaCita');
+            const fechaSeleccionada = new Date(fechaInput.value);
+            const fechaActual = new Date();
+            
+            fechaActual.setHours(0, 0, 0, 0);
+            fechaSeleccionada.setHours(0, 0, 0, 0);
+            
+            if (fechaSeleccionada <= fechaActual) {
+                fechaInput.classList.add('is-invalid');
+                document.getElementById('error-fechaCita').textContent = 'La fecha debe ser posterior a la fecha actual';
+                document.getElementById('error-fechaCita').classList.add('show');
+                return false;
+            } else {
+                fechaInput.classList.remove('is-invalid');
+                document.getElementById('error-fechaCita').classList.remove('show');
+                return true;
+            }
+        }
+        
+        // Modales
+        function mostrarModalNuevaCita() {
+            citaAEditar = null;
+            document.getElementById('modalCitaLabel').textContent = 'Agendar Nueva Cita';
+            document.getElementById('formCita').reset();
+            document.getElementById('estadoContainer').style.display = 'none';
+            limpiarValidaciones();
+            document.getElementById('citaId').value = Date.now();
+            
+            const fechaInput = document.getElementById('fechaCita');
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            fechaInput.value = tomorrow.toISOString().split('T')[0];
+            
+            setTimeout(() => { generarHorariosDisponibles(); }, 100);
+            new bootstrap.Modal(document.getElementById('modalCita')).show();
+        }
+        
+        function mostrarModalEditarCita(id) {
+            citaAEditar = citas.find(c => c.id == id);
+            if (!citaAEditar) return;
+            
+            document.getElementById('modalCitaLabel').textContent = 'Editar Cita';
+            document.getElementById('estadoContainer').style.display = 'block';
+            
+            document.getElementById('citaId').value = citaAEditar.id;
+            document.getElementById('nombreMascota').value = citaAEditar.nombreMascota;
+            document.getElementById('tipoMascota').value = citaAEditar.tipoMascota;
+            document.getElementById('nombrePropietario').value = citaAEditar.nombrePropietario;
+            document.getElementById('telefono').value = citaAEditar.telefono;
+            document.getElementById('fechaCita').value = citaAEditar.fecha;
+            document.getElementById('sintomas').value = citaAEditar.sintomas;
+            document.getElementById('estadoCita').value = citaAEditar.estado;
+            
+            limpiarValidaciones();
+            generarHorariosDisponibles();
+            
+            setTimeout(() => { document.getElementById('horaCita').value = citaAEditar.hora; }, 100);
+            new bootstrap.Modal(document.getElementById('modalCita')).show();
+        }
+        
+        function mostrarModalEliminarCita(id) {
+            citaAEliminar = id;
+            new bootstrap.Modal(document.getElementById('modalConfirmarEliminar')).show();
+        }
+        
+        function confirmarEliminarCita() {
+            if (!citaAEliminar) return;
+            citas = citas.filter(c => c.id != citaAEliminar);
+            guardarCitas();
+            mostrarCitas();
+            actualizarResumen();
+            mostrarMensajeExito('Cita eliminada correctamente');
+            bootstrap.Modal.getInstance(document.getElementById('modalConfirmarEliminar')).hide();
+            citaAEliminar = null;
+        }
+        
+        document.getElementById('btnConfirmarEliminar').addEventListener('click', confirmarEliminarCita);
+        
+        // Gestión de horarios
+        function generarHorariosDisponibles() {
+            const fechaSeleccionada = document.getElementById('fechaCita').value;
+            const selectHora = document.getElementById('horaCita');
+            
+            selectHora.innerHTML = '<option value="">Seleccione una hora</option>';
+            
+            if (!fechaSeleccionada) {
+                selectHora.disabled = true;
+                return;
+            }
+            
+            const fechaActual = new Date();
+            const fechaCita = new Date(fechaSeleccionada);
+            fechaCita.setHours(0, 0, 0, 0);
+            fechaActual.setHours(0, 0, 0, 0);
+            
+            if (fechaCita < fechaActual) {
+                selectHora.innerHTML = '<option value="">Fecha inválida - debe ser posterior o igual a hoy</option>';
+                selectHora.disabled = true;
+                return;
+            }
+            
+            selectHora.disabled = false;
+            
+            for (let hora = 8; hora <= 20; hora++) {
+                for (let minuto of ['00', '30']) {
+                    if (hora === 20 && minuto === '30') continue;
+                    
+                    const hora24 = `${hora.toString().padStart(2, '0')}:${minuto}`;
+                    const hora12 = hora > 12 ? hora - 12 : hora;
+                    const amPm = hora >= 12 ? 'PM' : 'AM';
+                    const horaDisplay = `${hora12}:${minuto} ${amPm}`;
+                    
+                    const horarioOcupado = citas.some(c => 
+                        !(citaAEditar && c.id === citaAEditar.id) && 
+                        c.fecha === fechaSeleccionada && 
+                        c.hora === hora24
+                    );
+                    
+                    const option = document.createElement('option');
+                    option.value = hora24;
+                    option.textContent = horaDisplay + (horarioOcupado ? ' (Ocupado)' : '');
+                    option.disabled = horarioOcupado;
+                    selectHora.appendChild(option);
+                }
+            }
+            
+            if (citaAEditar && citaAEditar.fecha === fechaSeleccionada) {
+                selectHora.value = citaAEditar.hora;
+            }
+        }
+        
+        function mostrarSweetAlertError() {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
+        }
+        
+        function guardarCita() {
+            if (!validarFormularioCompleto()) {
+                mostrarSweetAlertError();
+                return;
+            }
+            
+            const id = parseInt(document.getElementById('citaId').value);
+            const nombreMascota = document.getElementById('nombreMascota').value.trim();
+            const tipoMascota = document.getElementById('tipoMascota').value;
+            const nombrePropietario = document.getElementById('nombrePropietario').value.trim();
+            const telefono = document.getElementById('telefono').value.trim();
+            const fechaCita = document.getElementById('fechaCita').value;
+            const horaCita = document.getElementById('horaCita').value;
+            const sintomas = document.getElementById('sintomas').value.trim();
+            const estado = citaAEditar ? document.getElementById('estadoCita').value : 'abierta';
+            
+            const nuevaCita = { id, nombreMascota, tipoMascota, nombrePropietario, telefono, fecha: fechaCita, hora: horaCita, sintomas, estado };
+            
+            if (citaAEditar) {
+                const indice = citas.findIndex(c => c.id === citaAEditar.id);
+                if (indice !== -1) citas[indice] = nuevaCita;
+            } else {
+                citas.push(nuevaCita);
+            }
+            
+            guardarCitas();
+            mostrarCitas();
+            actualizarResumen();
+            
+            bootstrap.Modal.getInstance(document.getElementById('modalCita')).hide();
+            mostrarMensajeExito(citaAEditar ? 'Cita actualizada correctamente' : 'Cita guardada correctamente');
+        }
+        
+        function validarFormularioCompleto() {
+            let valido = true;
+            let primerCampoInvalido = null;
+            
+            limpiarValidaciones();
+            
+            const camposRequeridos = [
+                {id: 'nombreMascota', nombre: 'nombre de la mascota'},
+                {id: 'tipoMascota', nombre: 'tipo de mascota'},
+                {id: 'nombrePropietario', nombre: 'nombre del propietario'},
+                {id: 'telefono', nombre: 'teléfono'},
+                {id: 'fechaCita', nombre: 'fecha de cita'},
+                {id: 'horaCita', nombre: 'hora de cita'},
+                {id: 'sintomas', nombre: 'síntomas'}
+            ];
+            
+            for (let campo of camposRequeridos) {
+                const elemento = document.getElementById(campo.id);
+                const errorElement = document.getElementById('error-' + campo.id);
+                
+                if (elemento.value.trim() === '' || (elemento.tagName === 'SELECT' && elemento.value === '')) {
+                    elemento.classList.add('is-invalid');
+                    errorElement.textContent = `El ${campo.nombre} es requerido`;
+                    errorElement.classList.add('show');
+                    valido = false;
+                    if (!primerCampoInvalido) primerCampoInvalido = elemento;
+                }
+            }
+            
+            if (!valido) {
+                if (primerCampoInvalido) primerCampoInvalido.focus();
+                return false;
+            }
+            
+            // Validar fecha
+            const fechaInput = document.getElementById('fechaCita');
+            const fechaSeleccionada = new Date(fechaInput.value);
+            const fechaActual = new Date();
+            fechaActual.setHours(0, 0, 0, 0);
+            fechaSeleccionada.setHours(0, 0, 0, 0);
+            
+            if (fechaSeleccionada <= fechaActual) {
+                fechaInput.classList.add('is-invalid');
+                document.getElementById('error-fechaCita').textContent = 'La fecha debe ser posterior a la fecha actual';
+                document.getElementById('error-fechaCita').classList.add('show');
+                fechaInput.focus();
+                return false;
+            }
+            
+            // Validar hora
+            const horaInput = document.getElementById('horaCita');
+            const horaSeleccionada = horaInput.value;
+            if (horaSeleccionada) {
+                const [horas, minutos] = horaSeleccionada.split(':').map(Number);
+                if (horas < 8 || horas > 20 || (horas === 20 && minutos > 0)) {
+                    horaInput.classList.add('is-invalid');
+                    document.getElementById('error-horaCita').textContent = 'El horario debe estar entre 8:00 AM y 8:00 PM';
+                    document.getElementById('error-horaCita').classList.add('show');
+                    horaInput.focus();
+                    return false;
+                }
+            }
+            
+            // Validar teléfono
+            const telefonoInput = document.getElementById('telefono');
+            const telefono = telefonoInput.value.trim();
+            if (!/^[0-9]+$/.test(telefono)) {
+                telefonoInput.classList.add('is-invalid');
+                document.getElementById('error-telefono').textContent = 'El teléfono debe contener solo números';
+                document.getElementById('error-telefono').classList.add('show');
+                telefonoInput.focus();
+                return false;
+            }
+            
+            // Validar horario ocupado
+            const fechaCita = document.getElementById('fechaCita').value;
+            const horaCita = document.getElementById('horaCita').value;
+            
+            if (fechaCita && horaCita) {
+                const horarioOcupado = citas.some(c => 
+                    !(citaAEditar && c.id === citaAEditar.id) && 
+                    c.fecha === fechaCita && 
+                    c.hora === horaCita
+                );
+                
+                if (horarioOcupado) {
+                    horaInput.classList.add('is-invalid');
+                    document.getElementById('error-horaCita').textContent = 'Este horario ya está ocupado para la fecha seleccionada';
+                    document.getElementById('error-horaCita').classList.add('show');
+                    horaInput.focus();
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        function limpiarValidaciones() {
+            document.querySelectorAll('.is-invalid').forEach(e => e.classList.remove('is-invalid'));
+            document.querySelectorAll('.validation-message').forEach(e => e.classList.remove('show'));
+        }
+        
+        // Cambiar estado de cita
+        function cambiarEstadoCita(id, nuevoEstado) {
+            const citaIndex = citas.findIndex(c => c.id == id);
+            if (citaIndex === -1) return;
+            
+            citas[citaIndex].estado = nuevoEstado;
+            guardarCitas();
+            mostrarCitas();
+            actualizarResumen();
+            
+            let mensajeEstado = '';
+            if (nuevoEstado === 'abierta') mensajeEstado = 'Cita marcada como Abierta';
+            else if (nuevoEstado === 'terminada') mensajeEstado = 'Cita marcada como Terminada';
+            else mensajeEstado = 'Cita marcada como Anulada';
+            
+            mostrarMensajeExito(mensajeEstado);
+            
+            const dropdown = document.getElementById('dropdownEstado-' + id);
+            if (dropdown) dropdown.classList.remove('show');
+        }
+        
+        function toggleEstadoDropdown(id) {
+            document.querySelectorAll('.dropdown-estado-content').forEach(d => d.classList.remove('show'));
+            const dropdown = document.getElementById('dropdownEstado-' + id);
+            if (dropdown) dropdown.classList.toggle('show');
+            if (event) event.stopPropagation();
+        }
+        
+        // Mostrar citas
+        function mostrarCitas() {
+            const listaCitas = document.getElementById('listaCitas');
+            
+            let citasFiltradas = filtroActual === 'todas' ? citas : citas.filter(c => c.estado === filtroActual);
+            citasFiltradas.sort((a, b) => new Date(a.fecha + 'T' + a.hora) - new Date(b.fecha + 'T' + b.hora));
+            
+            if (citasFiltradas.length === 0) {
+                let mensaje = '';
+                if (filtroActual === 'todas') {
+                    mensaje = 'No hay citas programadas. Comienza agregando una nueva cita.';
+                } else {
+                    const estadoTexto = filtroActual === 'abierta' ? 'Abiertas' : filtroActual === 'terminada' ? 'Terminadas' : 'Anuladas';
+                    mensaje = `No hay citas con estado "${estadoTexto}".`;
+                }
+                listaCitas.innerHTML = `<div class="empty-state"><i class="bi bi-calendar-x"></i><h4 class="title-font">No se encontraron citas</h4><p class="accent-font">${mensaje}</p></div>`;
+                return;
+            }
+            
+            let citasHTML = '';
+            
+            citasFiltradas.forEach(c => {
+                const fechaObj = new Date(c.fecha);
+                const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+                
+                const [horas, minutos] = c.hora.split(':');
+                const horaNum = parseInt(horas);
+                const horaFormato12 = horaNum > 12 ? horaNum - 12 : horaNum;
+                const amPm = horaNum >= 12 ? 'PM' : 'AM';
+                const horaFormateada = `${horaFormato12}:${minutos} ${amPm}`;
+                
+                const gifAnimal = animalGifs[c.tipoMascota] || animalGifs['Otro'];
+                
+                let estadoClase = '', estadoTexto = '', estadoBadge = '';
+                if (c.estado === 'abierta') { estadoClase = ''; estadoTexto = 'Abierta'; estadoBadge = 'estado-abierta'; }
+                else if (c.estado === 'terminada') { estadoClase = 'terminada'; estadoTexto = 'Terminada'; estadoBadge = 'estado-terminada'; }
+                else if (c.estado === 'anulada') { estadoClase = 'anulada'; estadoTexto = 'Anulada'; estadoBadge = 'estado-anulada'; }
+                
+                const iconoAnimal = animalIcons[c.tipoMascota] || 'bi-bug';
+                
+                citasHTML += `
+                    <div class="card cita-card ${estadoClase}">
+                        <div class="card-body">
+                            <div class="cita-header">
+                                <img src="${gifAnimal}" alt="${c.tipoMascota}" class="animal-gif-small">
+                                <div class="cita-info">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h5 class="card-title mb-1 title-font"><i class="bi ${iconoAnimal}" style="color: var(--secondary-color);"></i> ${c.nombreMascota} - ${c.tipoMascota}</h5>
+                                            <p class="text-muted mb-1 accent-font"><i class="bi bi-person" style="color: var(--primary-color);"></i> Propietario: ${c.nombrePropietario}</p>
+                                        </div>
+                                        <div class="dropdown-estado">
+                                            <button class="estado-badge ${estadoBadge} accent-font" onclick="toggleEstadoDropdown(${c.id})">${estadoTexto} <i class="bi bi-chevron-down"></i></button>
+                                            <div class="dropdown-estado-content" id="dropdownEstado-${c.id}">
+                                                <button class="btn-abierta accent-font" onclick="cambiarEstadoCita(${c.id}, 'abierta')"><i class="bi bi-clock me-2" style="color: var(--primary-color);"></i>Marcar como Abierta</button>
+                                                <button class="btn-terminada accent-font" onclick="cambiarEstadoCita(${c.id}, 'terminada')"><i class="bi bi-check-circle me-2" style="color: var(--success-color);"></i>Marcar como Terminada</button>
+                                                <button class="btn-anulada accent-font" onclick="cambiarEstadoCita(${c.id}, 'anulada')"><i class="bi bi-x-circle me-2" style="color: var(--danger-color);"></i>Marcar como Anulada</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2"><div class="col-md-12"><p class="mb-1 accent-font"><i class="bi bi-telephone" style="color: var(--primary-color);"></i> Teléfono: ${c.telefono}</p></div></div>
+                            <div class="row mb-2">
+                                <div class="col-md-6"><p class="mb-1 accent-font"><i class="bi bi-calendar-event" style="color: var(--primary-color);"></i> Fecha: ${fechaFormateada}</p></div>
+                                <div class="col-md-6"><p class="mb-1 accent-font"><i class="bi bi-clock" style="color: var(--primary-color);"></i> Hora: ${horaFormateada}</p></div>
+                            </div>
+                            <div class="row mb-3"><div class="col-md-12"><p class="mb-1 accent-font"><i class="bi bi-info-circle" style="color: var(--primary-color);"></i> Síntomas: ${c.sintomas}</p></div></div>
+                            <div class="card-footer-buttons"><div class="d-flex justify-content-end">
+                                <button class="btn btn-sm btn-outline-primary me-2 accent-font" onclick="mostrarModalEditarCita(${c.id})"><i class="bi bi-pencil" style="color: var(--primary-color);"></i> Editar</button>
+                                <button class="btn btn-sm btn-outline-danger accent-font" onclick="mostrarModalEliminarCita(${c.id})"><i class="bi bi-trash" style="color: var(--danger-color);"></i> Eliminar</button>
+                            </div></div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            listaCitas.innerHTML = citasHTML;
+        }
+        
+       
+        function actualizarResumen() {
+            const total = citas.length;
+            const abiertas = citas.filter(c => c.estado === 'abierta').length;
+            const terminadas = citas.filter(c => c.estado === 'terminada').length;
+            const anuladas = citas.filter(c => c.estado === 'anulada').length;
+            
+            document.getElementById('totalCitas').textContent = total;
+            document.getElementById('abiertasCitas').textContent = abiertas;
+            document.getElementById('terminadasCitas').textContent = terminadas;
+            document.getElementById('anuladasCitas').textContent = anuladas;
+        }
+        
+        function mostrarMensajeExito(mensaje) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3';
+            alertDiv.style.zIndex = '1050';
+            alertDiv.style.backgroundColor = 'var(--primary-color)';
+            alertDiv.style.color = 'var(--text-color)';
+            alertDiv.style.borderColor = 'var(--secondary-color)';
+            alertDiv.style.fontFamily = "'Nunito', sans-serif";
+            alertDiv.style.fontWeight = '600';
+            alertDiv.innerHTML = `<i class="bi bi-check-circle me-2" style="color: var(--text-color);"></i><strong>${mensaje}</strong><button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+            
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 3000);
+        }
+    </script>
+</body>
+    <style>
+        :root {
+            --primary-color: #FFC107; --secondary-color: #FF9800; --accent-color: #FFEB3B;
+            --success-color: #4CAF50; --danger-color: #F44336; --light-color: #FFFDE7;
+            --dark-color: #FF8F00; --card-bg: #FFFFFF; --body-bg: #FFF9C4; --text-color: #5D4037;
+        }
+        body { background: var(--body-bg); font-family: 'Nunito', sans-serif; color: var(--text-color); min-height: 100vh; font-weight: 500; }
+        .title-font { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: -0.5px; }
+        .subtitle-font { font-family: 'Quicksand', sans-serif; font-weight: 600; font-style: italic; }
+        .accent-font { font-family: 'Nunito', sans-serif; font-weight: 700; font-style: italic; }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), #FFB300);
+            color: var(--text-color); padding: 1.5rem 0; margin-bottom: 2.5rem;
+            box-shadow: 0 4px 20px rgba(255,152,0,.2); position: relative; overflow: hidden;
+            border-bottom: 6px solid var(--accent-color);
+        }
+        .header::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%235D4037' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: .08;
+        }
+        .logo-container { text-align: center; margin-bottom: .5rem; }
+        .main-title {
+            font-family: 'Poppins', sans-serif; font-size: 3.5rem; font-weight: 900; letter-spacing: 1.5px;
+            margin: 0; color: var(--text-color); text-shadow: 3px 3px 6px rgba(93,64,55,.3);
+            position: relative; display: inline-block; padding: 0 1.5rem; text-transform: uppercase;
+            animation: titleGlow 4s infinite alternate;
+        }
+        .main-title::before { content: '🐾'; position: absolute; left: -45px; top: 50%; transform: translateY(-50%); font-size: 2rem; opacity: .9; color: var(--secondary-color); }
+        .main-title::after { content: '🐾'; position: absolute; right: -45px; top: 50%; transform: translateY(-50%); font-size: 2rem; opacity: .9; color: var(--secondary-color); }
+        .subtitle { font-family: 'Quicksand', sans-serif; font-size: 1.5rem; font-weight: 700; font-style: italic; color: var(--text-color); letter-spacing: .8px; margin-bottom: 0; opacity: .95; }
+        
+        .filtros-container { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .menu-toggle {
+            background: linear-gradient(135deg, var(--primary-color), #FFB300); border: none;
+            padding: .6rem 1rem; border-radius: 8px; color: var(--text-color); font-weight: 700;
+            font-family: 'Nunito', sans-serif; cursor: pointer; transition: all .3s ease;
+            display: flex; align-items: center; gap: .5rem; box-shadow: 0 3px 8px rgba(255,193,7,.2);
+            border: 1px solid rgba(255,255,255,.3);
+        }
+        .menu-toggle:hover { background: linear-gradient(135deg, #FFB300, var(--primary-color)); transform: translateY(-2px); box-shadow: 0 5px 12px rgba(255,193,7,.3); }
+        .menu-icon { display: flex; flex-direction: column; gap: 4px; }
+        .menu-icon span { width: 25px; height: 2.5px; background-color: var(--text-color); border-radius: 2px; }
+        .filtros-dropdown { position: relative; display: inline-block; }
+        
+        .dropdown-content {
+            display: none; position: absolute; background: #fff; min-width: 220px;
+            box-shadow: 0 6px 20px rgba(255,152,0,.15); border-radius: 10px; padding: .8rem;
+            z-index: 1000; border: 1px solid rgba(255,193,7,.3); top: 100%; left: 0; margin-top: .5rem;
+        }
+        .dropdown-content.show { display: block; animation: fadeIn .3s ease; }
+        .dropdown-content .btn {
+            display: block; width: 100%; text-align: left; margin-bottom: .4rem; padding: .5rem .8rem;
+            border-radius: 6px; transition: all .3s ease; font-weight: 600;
+            font-family: 'Nunito', sans-serif; border: 1px solid rgba(255,193,7,.2); color: var(--text-color);
+        }
+        .dropdown-content .btn:hover { transform: translateX(3px); background-color: var(--light-color); }
+        .dropdown-content .btn.active { background: linear-gradient(135deg, var(--secondary-color), #FF8F00); color: #fff; border-color: var(--secondary-color); box-shadow: 0 3px 6px rgba(255,152,0,.2); }
+        .filtro-activo {
+            background: linear-gradient(135deg, var(--primary-color), #FFB300); color: var(--text-color);
+            padding: .5rem 1rem; border-radius: 8px; font-weight: 700; font-family: 'Nunito', sans-serif;
+            border: 1px solid rgba(255,255,255,.3); display: flex; align-items: center; gap: .5rem;
+            box-shadow: 0 2px 6px rgba(255,193,7,.2);
+        }
+        
+        .citas-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card {
+            border-radius: 12px; box-shadow: 0 4px 15px rgba(255,152,0,.08); border: 1px solid rgba(255,193,7,.2);
+            transition: all .3s ease; background: var(--card-bg); overflow: hidden;
+            border-top: 4px solid var(--secondary-color); height: 100%; display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(255,152,0,.12); border-color: rgba(255,152,0,.4); }
+        .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+        .animal-gif-small {
+            width: 60px; height: 60px; border-radius: 8px; object-fit: cover;
+            border: 2px solid var(--primary-color); box-shadow: 0 2px 8px rgba(255,193,7,.2);
+            margin-right: 15px; float: left;
+        }
+        .cita-header { display: flex; align-items: flex-start; margin-bottom: 1rem; }
+        .cita-info { flex: 1; }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #FFB300); border: none;
+            padding: .7rem 1.8rem; border-radius: 8px; font-weight: 700; font-family: 'Nunito', sans-serif;
+            letter-spacing: .3px; transition: all .3s ease; box-shadow: 0 3px 10px rgba(255,193,7,.2);
+            color: var(--text-color); border: 1px solid rgba(255,255,255,.3);
+        }
+        .btn-primary:hover { background: linear-gradient(135deg, #FFB300, var(--primary-color)); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,193,7,.3); }
+        .btn-light {
+            background: rgba(255,255,255,.95); border: 1px solid var(--secondary-color);
+            padding: .7rem 1.8rem; border-radius: 8px; font-weight: 700; font-family: 'Nunito', sans-serif;
+            color: var(--text-color); transition: all .3s ease; box-shadow: 0 3px 8px rgba(255,152,0,.1);
+        }
+        .btn-light:hover { background: var(--secondary-color); color: #fff; transform: translateY(-2px); box-shadow: 0 5px 12px rgba(255,152,0,.2); }
+        .btn-outline-primary {
+            border: 1px solid var(--primary-color); color: var(--text-color); font-weight: 600;
+            font-family: 'Nunito', sans-serif; border-radius: 6px; transition: all .3s ease;
+            background: rgba(255,193,7,.1);
+        }
+        .btn-outline-primary:hover { background: linear-gradient(135deg, var(--primary-color), #FFB300); color: var(--text-color); transform: translateY(-2px); box-shadow: 0 3px 8px rgba(255,193,7,.2); }
+        
+        .cita-card { border-left: 5px solid var(--primary-color); position: relative; overflow: hidden; }
+        .cita-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            opacity: 0; transition: opacity .3s ease;
+        }
+        .cita-card:hover::before { opacity: 1; }
+        .cita-card.terminada { border-left-color: var(--success-color); }
+        .cita-card.terminada::before { background: linear-gradient(90deg, var(--success-color), #66BB6A); }
+        .cita-card.anulada { border-left-color: var(--danger-color); }
+        .cita-card.anulada::before { background: linear-gradient(90deg, var(--danger-color), #E53935); }
+        
+        .estado-badge {
+            padding: .4rem 1rem; border-radius: 20px; font-size: .8rem; font-weight: 700;
+            font-family: 'Nunito', sans-serif; letter-spacing: .3px; box-shadow: 0 2px 5px rgba(93,64,55,.1);
+        }
+        .estado-abierta { background: linear-gradient(135deg, var(--primary-color), #FFB300); color: var(--text-color); border: 1px solid rgba(255,255,255,.3); }
+        .estado-terminada { background: linear-gradient(135deg, var(--success-color), #66BB6A); color: #fff; border: 1px solid rgba(255,255,255,.2); }
+        .estado-anulada { background: linear-gradient(135deg, var(--danger-color), #E53935); color: #fff; border: 1px solid rgba(255,255,255,.2); }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: var(--text-color); border-radius: 12px 12px 0 0; padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,.3);
+        }
+        .modal-title { font-weight: 700; font-family: 'Poppins', sans-serif; color: var(--text-color); font-size: 1.3rem; }
+        .modal-content { border-radius: 12px; border: 1px solid rgba(255,193,7,.3); box-shadow: 0 8px 30px rgba(255,152,0,.15); }
+        
+        .footer {
+            background: linear-gradient(135deg, var(--dark-color), #FF8F00); color: var(--text-color);
+            padding: 2rem 0; margin-top: 3rem; text-align: center; position: relative; overflow: hidden;
+            border-top: 4px solid var(--accent-color);
+        }
+        .footer::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%235D4037' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: .05;
+        }
+        .footer a { color: var(--text-color); text-decoration: underline; font-weight: 700; font-family: 'Nunito', sans-serif; transition: all .3s ease; }
+        .footer a:hover { color: #fff; }
+        
+        .empty-state { text-align: center; padding: 3rem 2rem; color: #8D6E63; grid-column: 1/-1; }
+        .empty-state i { font-size: 4rem; margin-bottom: 1.2rem; opacity: .3; color: var(--primary-color); }
+        .empty-state h4 { color: var(--text-color); font-weight: 700; font-family: 'Poppins', sans-serif; margin-bottom: .8rem; }
+        
+        .form-label { font-weight: 700; font-family: 'Nunito', sans-serif; color: var(--text-color); margin-bottom: .5rem; font-size: .95rem; }
+        .required::after { content: " *"; color: var(--danger-color); }
+        .form-control, .form-select {
+            border: 1px solid rgba(255,193,7,.4); border-radius: 8px; padding: .7rem 1rem;
+            transition: all .3s ease; background: #fff; color: var(--text-color);
+            font-family: 'Nunito', sans-serif; font-weight: 500;
+        }
+        .form-control:focus, .form-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 .2rem rgba(255,235,59,.3); }
+        .form-control.is-invalid, .form-select.is-invalid { border-color: var(--danger-color); }
+        .form-select { background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23FFC107' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") no-repeat right 1rem center/16px 12px; cursor: pointer; }
+        
+        .validation-message {
+            font-size: .8rem; color: var(--danger-color); display: none; margin-top: .25rem;
+            font-weight: 600; font-family: 'Nunito', sans-serif; padding-left: .5rem;
+            border-left: 2px solid var(--danger-color);
+        }
+        .validation-message.show { display: block; animation: fadeIn .3s ease-in; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes titleGlow { 0%,100% { text-shadow: 2px 2px 4px rgba(93,64,55,.2); } 50% { text-shadow: 3px 3px 6px rgba(93,64,55,.3), 0 0 15px rgba(255,235,59,.3); } }
+        
+        .resumen-container { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+        .resumen-item {
+            background: #fff; border-radius: 10px; padding: .8rem 1.2rem;
+            box-shadow: 0 3px 10px rgba(255,152,0,.08); border: 1px solid rgba(255,193,7,.2);
+            min-width: 130px; text-align: center; transition: all .3s ease;
+        }
+        .resumen-item:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,152,0,.12); }
+        .resumen-titulo { font-size: .85rem; font-weight: 700; font-family: 'Nunito', sans-serif; color: var(--text-color); margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .5px; }
+        .resumen-valor { font-size: 1.6rem; font-weight: 800; font-family: 'Poppins', sans-serif; }
+        .resumen-total .resumen-valor { color: var(--text-color); }
+        .resumen-abiertas .resumen-valor { color: var(--primary-color); }
+        .resumen-terminadas .resumen-valor { color: var(--success-color); }
+        .resumen-anuladas .resumen-valor { color: var(--danger-color); }
+        
+        .alert-warning { background-color: rgba(255,87,34,.1); border-color: rgba(255,87,34,.2); color: var(--text-color); }
+        .text-muted { color: #8D6E63!important; font-family: 'Nunito', sans-serif; font-weight: 500; font-style: italic; }
+        .btn-sm { padding: .25rem .75rem; font-size: .875rem; }
+        .card-footer-buttons { margin-top: auto; padding-top: 1rem; }
+        
+        .dropdown-estado { position: relative; display: inline-block; }
+        .dropdown-estado-content {
+            display: none; position: absolute; background: #fff; min-width: 160px;
+            box-shadow: 0 6px 20px rgba(255,152,0,.15); border-radius: 8px; padding: .5rem;
+            z-index: 1001; border: 1px solid rgba(255,193,7,.3); right: 0; top: 100%;
+        }
+        .dropdown-estado-content.show { display: block; animation: fadeIn .2s ease; }
+        .dropdown-estado-content button {
+            display: block; width: 100%; text-align: left; margin-bottom: .3rem; padding: .5rem .8rem;
+            border-radius: 6px; transition: all .3s ease; font-size: .85rem; font-weight: 600;
+            font-family: 'Nunito', sans-serif; border: none; background: 0 0; color: var(--text-color);
+        }
+        .dropdown-estado-content button:hover { transform: translateX(3px); background-color: var(--light-color); }
+        .btn-abierta:hover { color: var(--primary-color); background-color: rgba(255,193,7,.15); }
+        .btn-terminada:hover { color: var(--success-color); background-color: rgba(76,175,80,.15); }
+        .btn-anulada:hover { color: var(--danger-color); background-color: rgba(244,67,54,.15); }
+        
+        @media (max-width: 768px) {
+            .main-title { font-size: 2.5rem; }
+            .main-title::after, .main-title::before { display: none; }
+            .subtitle { font-size: 1.2rem; }
+            .animal-gif-small { width: 50px; height: 50px; margin-right: 10px; }
+            .filtros-container { flex-direction: column; align-items: flex-start; gap: .8rem; }
+            .dropdown-content { position: static; width: 100%; margin-top: .5rem; }
+            .citas-container { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .dropdown-estado-content { left: 0; right: auto; }
+        }
+        @media (max-width: 576px) {
+            .main-title { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+            .citas-container { grid-template-columns: 1fr; }
+        }
+    </style
+</html>
