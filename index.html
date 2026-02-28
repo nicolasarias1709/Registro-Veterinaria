@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ESTILOS CSS - Mantienen la interfaz bonita y responsiva */
         :root {
             --primary-color: #FFC107; --secondary-color: #FF9800; --accent-color: #FFEB3B;
             --success-color: #4CAF50; --danger-color: #F44336; --light-color: #FFFDE7;
@@ -290,7 +291,7 @@
                 </div>
                 <p class="subtitle subtitle-font text-center">Sabiduría y cuidado para tus mascotas 🐾❤️</p>
                 
-                <!-- BOTÓN NUEVA CITA - TOTALMENTE REDISEÑADO Y FUNCIONAL -->
+                <!-- BOTÓN NUEVA CITA -->
                 <div class="boton-container">
                     <button class="btn-nueva-cita" id="btnNuevaCita" type="button">
                         <i class="bi bi-plus-circle-fill"></i> NUEVA CITA
@@ -467,14 +468,18 @@
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Variables globales
-        let citas = [];
-        let citaAEditar = null;
-        let citaAEliminar = null;
-        let filtroActual = 'todas';
-        
-        // Constantes para imágenes y iconos
-        const animalGifs = {
+        // ============================================
+        // VARIABLES GLOBALES (se pueden usar en todas las funciones)
+        // ============================================
+        let citas = [];              // Array que guarda TODAS las citas (cada cita es un objeto)
+        let citaAEditar = null;      // Guarda la cita que estamos editando (o null si es nueva)
+        let citaAEliminar = null;    // Guarda el ID de la cita que vamos a eliminar
+        let filtroActual = 'todas';   // Controla qué filtro está activo: 'todas', 'abierta', 'terminada', 'anulada'
+
+        // ============================================
+        // OBJETOS DE CONFIGURACIÓN (para imágenes e iconos)
+        // ============================================
+        const animalGifs = {          // Objeto que mapea cada tipo de animal con su GIF
             'Perro': 'https://i.pinimg.com/originals/4e/4f/24/4e4f24dd59eeee057dcd2a53eb8d170a.gif',
             'Gato': 'https://img1.picmix.com/output/stamp/normal/7/3/4/8/1968437_c6c64.gif',
             'Conejo': 'https://usagif.com/wp-content/uploads/gifs/dancing-rabbit-22.gif',
@@ -488,57 +493,58 @@
             'Otro': 'https://img1.picmix.com/output/stamp/normal/1/0/8/4/324801_da9ed.gif'
         };
         
-        const animalIcons = {
+        const animalIcons = {         // Objeto que mapea cada tipo de animal con su ícono de Bootstrap
             'Perro': 'bi-dog', 'Gato': 'bi-cat', 'Conejo': 'bi-bug', 'Hamster': 'bi-bug',
             'Pájaro': 'bi-bug', 'Tortuga': 'bi-bug', 'Pez': 'bi-bug', 'Hurón': 'bi-bug',
             'Cobaya': 'bi-bug', 'Iguana': 'bi-bug', 'Otro': 'bi-bug'
         };
-        
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Cargado - Inicializando aplicación');
+
+        // ============================================
+        // INICIALIZACIÓN - Se ejecuta cuando la página carga
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {  // Cuando el HTML termina de cargar
+            console.log('DOM Cargado - Inicializando aplicación');  // Mensaje en consola para debug
             
-            // Verificar que el botón existe antes de asignar evento
-            const btnNuevaCita = document.getElementById('btnNuevaCita');
-            if (btnNuevaCita) {
+            // Configurar botón Nueva Cita
+            const btnNuevaCita = document.getElementById('btnNuevaCita');  // Busca el botón por su ID
+            if (btnNuevaCita) {                                           // Si existe el botón
                 console.log('Botón Nueva Cita encontrado, asignando evento');
-                btnNuevaCita.onclick = function() {
+                btnNuevaCita.onclick = function() {                       // Asigna función al hacer clic
                     console.log('Botón Nueva Cita clickeado - FUNCIONANDO');
-                    mostrarModalNuevaCita();
-                    return false;
+                    mostrarModalNuevaCita();                              // Abre el modal para nueva cita
+                    return false;                                          // Evita comportamiento por defecto
                 };
             } else {
-                console.error('ERROR: Botón Nueva Cita NO encontrado');
+                console.error('ERROR: Botón Nueva Cita NO encontrado');   // Error si no encuentra el botón
             }
             
-            // Cargar datos
-            cargarCitas();
-            inicializarEventos();
-            actualizarResumen();
+            cargarCitas();                  // Carga las citas guardadas (o crea ejemplos)
+            inicializarEventos();            // Configura todos los eventos (clics, cambios, etc.)
+            actualizarResumen();             // Actualiza los contadores (Total, Abiertas, etc.)
             
-            // Año actual en footer
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();  // Pone el año actual en el footer
             
-            // Configurar fecha mínima
+            // Configurar fecha mínima en el campo de fecha (no permitir fechas pasadas)
             const fechaInput = document.getElementById('fechaCita');
             if (fechaInput) {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                fechaInput.min = tomorrow.toISOString().split('T')[0];
-                fechaInput.addEventListener('input', validarFechaCita);
+                const tomorrow = new Date();                    // Obtiene fecha actual
+                tomorrow.setDate(tomorrow.getDate() + 1);       // Le suma 1 día (mañana)
+                fechaInput.min = tomorrow.toISOString().split('T')[0];  // Formato YYYY-MM-DD
+                fechaInput.addEventListener('input', validarFechaCita); // Valida mientras escribe
             }
         });
-        
-        // Función de carga de citas
-        function cargarCitas() {
+
+        // ============================================
+        // FUNCIONES DE GESTIÓN DE DATOS (localStorage)
+        // ============================================
+        function cargarCitas() {                              // Carga citas desde localStorage
             console.log('Cargando citas desde localStorage');
-            const citasGuardadas = localStorage.getItem('citasVeterinarias');
-            if (citasGuardadas) {
-                citas = JSON.parse(citasGuardadas);
+            const citasGuardadas = localStorage.getItem('citasVeterinarias');  // Obtiene datos guardados
+            if (citasGuardadas) {                             // Si hay datos guardados
+                citas = JSON.parse(citasGuardadas);           // Convierte de texto a objetos JavaScript
                 console.log('Citas cargadas:', citas.length);
-            } else {
-                // Datos de ejemplo
-                citas = [
+            } else {                                           // Si no hay datos guardados (primera vez)
+                citas = [                                      // Crea datos de ejemplo
                     { id: 1, nombreMascota: "Pelusa", tipoMascota: "Gato", nombrePropietario: "Marco Luna", telefono: "457567567567", fecha: "2026-02-01", hora: "15:30", sintomas: "sin apetito, letárgico", estado: "abierta" },
                     { id: 2, nombreMascota: "Max", tipoMascota: "Perro", nombrePropietario: "Ana García", telefono: "5551234567", fecha: "2026-02-03", hora: "10:00", sintomas: "tos constante", estado: "abierta" },
                     { id: 3, nombreMascota: "Coco", tipoMascota: "Pájaro", nombrePropietario: "Luis Rodríguez", telefono: "5559876543", fecha: "2026-02-02", hora: "14:00", sintomas: "plumas caídas", estado: "terminada" },
@@ -546,90 +552,97 @@
                     { id: 5, nombreMascota: "Nemo", tipoMascota: "Pez", nombrePropietario: "Sofía López", telefono: "5553216549", fecha: "2026-02-01", hora: "16:00", sintomas: "nada de lado", estado: "anulada" },
                     { id: 6, nombreMascota: "Rex", tipoMascota: "Perro", nombrePropietario: "Pedro Sánchez", telefono: "5557418529", fecha: "2026-02-05", hora: "09:00", sintomas: "cojea pata trasera", estado: "abierta" }
                 ];
-                guardarCitas();
+                guardarCitas();                                // Guarda los ejemplos en localStorage
                 console.log('Datos de ejemplo creados');
             }
-            mostrarCitas();
+            mostrarCitas();                                    // Muestra las citas en pantalla
         }
-        
-        function guardarCitas() {
-            localStorage.setItem('citasVeterinarias', JSON.stringify(citas));
+
+        function guardarCitas() {                              // Guarda citas en localStorage
+            localStorage.setItem('citasVeterinarias', JSON.stringify(citas));  // Convierte a texto y guarda
             console.log('Citas guardadas en localStorage');
         }
-        
-        // Eventos principales
+
+        // ============================================
+        // CONFIGURACIÓN DE EVENTOS
+        // ============================================
         function inicializarEventos() {
             console.log('Inicializando eventos secundarios');
             
-            // Botón Guardar Cita
+            // Evento para el botón GUARDAR CITA
             const btnGuardarCita = document.getElementById('btnGuardarCita');
             if (btnGuardarCita) {
                 btnGuardarCita.addEventListener('click', function() {
                     console.log('Botón Guardar Cita clickeado');
-                    guardarCita();
+                    guardarCita();                              // Llama a la función que guarda
                 });
             }
             
-            // Botón Confirmar Eliminar
+            // Evento para el botón CONFIRMAR ELIMINAR
             const btnConfirmarEliminar = document.getElementById('btnConfirmarEliminar');
             if (btnConfirmarEliminar) {
                 btnConfirmarEliminar.addEventListener('click', confirmarEliminarCita);
             }
             
-            // Toggle menú de filtros
+            // Evento para abrir/cerrar el menú de FILTROS
             const menuToggle = document.getElementById('menuToggle');
             if (menuToggle) {
                 menuToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    document.getElementById('dropdownFiltros').classList.toggle('show');
+                    e.stopPropagation();                        // Evita que el clic se propague
+                    document.getElementById('dropdownFiltros').classList.toggle('show');  // Muestra/oculta
                 });
             }
             
-            // Cerrar dropdowns al hacer clic fuera
+            // Evento para CERRAR DROPDOWNS al hacer clic fuera
             document.addEventListener('click', function(e) {
                 // Cerrar dropdown de filtros
                 const dropdown = document.getElementById('dropdownFiltros');
                 const menuToggle = document.getElementById('menuToggle');
                 
                 if (dropdown && !dropdown.contains(e.target) && menuToggle && !menuToggle.contains(e.target)) {
-                    dropdown.classList.remove('show');
+                    dropdown.classList.remove('show');          // Oculta el dropdown
                 }
                 
-                // Cerrar dropdowns de estado si el clic no fue en un botón de estado
-                if (!e.target.closest('.dropdown-estado')) {
+                // Cerrar dropdowns de estado
+                if (!e.target.closest('.dropdown-estado')) {    // Si el clic NO fue en un dropdown de estado
                     document.querySelectorAll('.dropdown-estado-content').forEach(dropdown => {
-                        dropdown.classList.remove('show');
+                        dropdown.classList.remove('show');      // Oculta todos
                     });
                 }
             });
             
-            // Filtros
+            // Eventos para los BOTONES DE FILTRO
             document.querySelectorAll('#dropdownFiltros .btn').forEach(btn => {
                 btn.addEventListener('click', function() {
+                    // Quitar clase active de todos los botones
                     document.querySelectorAll('#dropdownFiltros .btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
+                    this.classList.add('active');                // Poner active al clickeado
                     
-                    filtroActual = this.getAttribute('data-estado');
+                    filtroActual = this.getAttribute('data-estado');  // Obtiene el valor del filtro
                     
+                    // Actualizar el texto del filtro activo visible
                     const filtroActivo = document.getElementById('filtroActivo');
                     const icono = this.querySelector('i').className;
                     const texto = this.textContent.trim();
-                    
                     filtroActivo.innerHTML = `<i class="${icono}"></i><span>${texto}</span>`;
-                    document.getElementById('dropdownFiltros').classList.remove('show');
-                    mostrarCitas();
+                    
+                    document.getElementById('dropdownFiltros').classList.remove('show');  // Cierra el menú
+                    mostrarCitas();                                // Vuelve a mostrar aplicando filtro
                 });
             });
             
+            // Evento para GENERAR HORARIOS cuando cambia la fecha
             const fechaCita = document.getElementById('fechaCita');
             if (fechaCita) {
                 fechaCita.addEventListener('change', generarHorariosDisponibles);
             }
             
-            // Validaciones en tiempo real
+            // Validaciones en tiempo real mientras el usuario escribe
             document.querySelectorAll('#formCita input, #formCita select, #formCita textarea').forEach(input => {
                 input.addEventListener('input', function() {
-                    validarCampo(this);
+                    validarCampo(this);                           // Valida el campo
+                    
+                    // Validación especial para teléfono (solo números)
                     if (this.id === 'telefono' && this.value.trim() !== '' && !/^\d+$/.test(this.value.trim())) {
                         this.classList.add('is-invalid');
                         const errorElement = document.getElementById('error-telefono');
@@ -645,33 +658,36 @@
                 });
             });
         }
-        
-        function validarCampo(elemento) {
-            const errorId = 'error-' + elemento.id;
+
+        // ============================================
+        // FUNCIONES DE VALIDACIÓN
+        // ============================================
+        function validarCampo(elemento) {                        // Valida un campo individual
+            const errorId = 'error-' + elemento.id;              // ID del mensaje de error
             const errorElement = document.getElementById(errorId);
             
             if (elemento.value.trim() === '' || (elemento.tagName === 'SELECT' && elemento.value === '')) {
-                elemento.classList.add('is-invalid');
+                elemento.classList.add('is-invalid');            // Borde rojo
                 if (errorElement) {
                     errorElement.textContent = 'Este campo es requerido';
-                    errorElement.classList.add('show');
+                    errorElement.classList.add('show');          // Muestra mensaje
                 }
             } else {
-                elemento.classList.remove('is-invalid');
+                elemento.classList.remove('is-invalid');         // Quita borde rojo
                 if (errorElement) {
-                    errorElement.classList.remove('show');
+                    errorElement.classList.remove('show');       // Oculta mensaje
                 }
             }
         }
-        
-        function validarFechaCita() {
+
+        function validarFechaCita() {                            // Valida que la fecha sea futura
             const fechaInput = document.getElementById('fechaCita');
             if (!fechaInput || !fechaInput.value) return false;
             
             const fechaSeleccionada = new Date(fechaInput.value);
             const fechaActual = new Date();
             
-            fechaActual.setHours(0, 0, 0, 0);
+            fechaActual.setHours(0, 0, 0, 0);                    // Compara solo fechas (sin hora)
             fechaSeleccionada.setHours(0, 0, 0, 0);
             
             if (fechaSeleccionada <= fechaActual) {
@@ -691,57 +707,60 @@
                 return true;
             }
         }
-        
-        // Modales
-        function mostrarModalNuevaCita() {
+
+        // ============================================
+        // FUNCIONES DE MODALES
+        // ============================================
+        function mostrarModalNuevaCita() {                       // Abre modal para NUEVA cita
             console.log('Mostrando modal nueva cita - FUNCIÓN EJECUTADA');
             
-            citaAEditar = null;
+            citaAEditar = null;                                   // No hay cita en edición
             
             const modalLabel = document.getElementById('modalCitaLabel');
             if (modalLabel) modalLabel.textContent = 'Agendar Nueva Cita';
             
             const formCita = document.getElementById('formCita');
-            if (formCita) formCita.reset();
+            if (formCita) formCita.reset();                      // Limpia el formulario
             
             const estadoContainer = document.getElementById('estadoContainer');
-            if (estadoContainer) estadoContainer.style.display = 'none';
+            if (estadoContainer) estadoContainer.style.display = 'none';  // Oculta selector de estado
             
-            limpiarValidaciones();
+            limpiarValidaciones();                                 // Quita mensajes de error
             
             const citaIdInput = document.getElementById('citaId');
-            if (citaIdInput) citaIdInput.value = Date.now();
+            if (citaIdInput) citaIdInput.value = Date.now();      // Genera ID único (timestamp)
             
             const fechaInput = document.getElementById('fechaCita');
             if (fechaInput) {
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
-                fechaInput.value = tomorrow.toISOString().split('T')[0];
+                fechaInput.value = tomorrow.toISOString().split('T')[0];  // Fecha por defecto: mañana
             }
             
-            generarHorariosDisponibles();
+            generarHorariosDisponibles();                          // Genera lista de horas
             
             const modalElement = document.getElementById('modalCita');
             if (modalElement) {
                 console.log('Abriendo modal de Bootstrap');
                 const modal = new bootstrap.Modal(modalElement);
-                modal.show();
+                modal.show();                                      // Muestra el modal
             } else {
                 console.error('ERROR: Modal element no encontrado');
             }
         }
-        
-        function mostrarModalEditarCita(id) {
+
+        function mostrarModalEditarCita(id) {                     // Abre modal para EDITAR cita
             console.log('Mostrando modal editar cita:', id);
-            citaAEditar = citas.find(c => c.id == id);
+            citaAEditar = citas.find(c => c.id == id);            // Busca la cita por ID
             if (!citaAEditar) return;
             
             const modalLabel = document.getElementById('modalCitaLabel');
             if (modalLabel) modalLabel.textContent = 'Editar Cita';
             
             const estadoContainer = document.getElementById('estadoContainer');
-            if (estadoContainer) estadoContainer.style.display = 'block';
+            if (estadoContainer) estadoContainer.style.display = 'block';  // Muestra selector de estado
             
+            // Rellena todos los campos con los datos de la cita
             document.getElementById('citaId').value = citaAEditar.id;
             document.getElementById('nombreMascota').value = citaAEditar.nombreMascota;
             document.getElementById('tipoMascota').value = citaAEditar.tipoMascota;
@@ -754,9 +773,9 @@
             limpiarValidaciones();
             generarHorariosDisponibles();
             
-            setTimeout(() => { 
+            setTimeout(() => {                                     // Espera a que se generen las horas
                 const horaCitaSelect = document.getElementById('horaCita');
-                if (horaCitaSelect) horaCitaSelect.value = citaAEditar.hora; 
+                if (horaCitaSelect) horaCitaSelect.value = citaAEditar.hora;  // Selecciona la hora guardada
             }, 100);
             
             const modalElement = document.getElementById('modalCita');
@@ -765,42 +784,46 @@
                 modal.show();
             }
         }
-        
-        function mostrarModalEliminarCita(id) {
+
+        function mostrarModalEliminarCita(id) {                   // Abre modal de confirmación para eliminar
             console.log('Mostrando modal eliminar cita:', id);
-            citaAEliminar = id;
+            citaAEliminar = id;                                    // Guarda el ID a eliminar
             const modalElement = document.getElementById('modalConfirmarEliminar');
             if (modalElement) {
                 const modal = new bootstrap.Modal(modalElement);
                 modal.show();
             }
         }
-        
-        function confirmarEliminarCita() {
+
+        function confirmarEliminarCita() {                        // Ejecuta la eliminación (confirmada)
             console.log('Confirmando eliminación:', citaAEliminar);
             if (!citaAEliminar) return;
-            citas = citas.filter(c => c.id != citaAEliminar);
-            guardarCitas();
-            mostrarCitas();
-            actualizarResumen();
+            
+            citas = citas.filter(c => c.id != citaAEliminar);     // Filtra: quita la cita con ese ID
+            
+            guardarCitas();                                        // Guarda cambios
+            mostrarCitas();                                        // Actualiza pantalla
+            actualizarResumen();                                   // Actualiza contadores
             mostrarMensajeExito('Cita eliminada correctamente');
             
             const modalElement = document.getElementById('modalConfirmarEliminar');
             if (modalElement) {
                 const modal = bootstrap.Modal.getInstance(modalElement);
-                if (modal) modal.hide();
+                if (modal) modal.hide();                           // Cierra el modal
             }
-            citaAEliminar = null;
+            citaAEliminar = null;                                   // Limpia la variable
         }
-        
-        // Gestión de horarios
+
+        // ============================================
+        // FUNCIÓN PARA GENERAR HORARIOS
+        // ============================================
         function generarHorariosDisponibles() {
             const fechaSeleccionada = document.getElementById('fechaCita').value;
             const selectHora = document.getElementById('horaCita');
             
             if (!selectHora) return;
             
-            selectHora.innerHTML = '<option value="">Seleccione una hora</option>';
+            selectHora.innerHTML = '<option value="">Seleccione una hora</option>';  // Opción por defecto
             
             if (!fechaSeleccionada) {
                 selectHora.disabled = true;
@@ -820,7 +843,7 @@
             
             selectHora.disabled = false;
             
-            // Generar horarios de 8:00 AM a 8:00 PM cada 30 minutos
+            // Genera horarios de 8:00 AM a 8:00 PM cada 30 minutos
             for (let hora = 8; hora <= 20; hora++) {
                 for (let minuto of ['00', '30']) {
                     if (hora === 20 && minuto === '30') continue; // No incluir 8:30 PM
@@ -830,8 +853,9 @@
                     const amPm = hora >= 12 ? 'PM' : 'AM';
                     const horaDisplay = `${hora12}:${minuto} ${amPm}`;
                     
+                    // Verifica si el horario está ocupado por otra cita
                     const horarioOcupado = citas.some(c => 
-                        !(citaAEditar && c.id === citaAEditar.id) && 
+                        !(citaAEditar && c.id === citaAEditar.id) &&  // Excluye la cita que se está editando
                         c.fecha === fechaSeleccionada && 
                         c.hora === hora24
                     );
@@ -839,22 +863,25 @@
                     const option = document.createElement('option');
                     option.value = hora24;
                     option.textContent = horaDisplay + (horarioOcupado ? ' (Ocupado)' : '');
-                    option.disabled = horarioOcupado;
+                    option.disabled = horarioOcupado;                  // Deshabilita si está ocupado
                     selectHora.appendChild(option);
                 }
             }
             
+            // Si estamos editando, selecciona la hora original
             if (citaAEditar && citaAEditar.fecha === fechaSeleccionada) {
                 selectHora.value = citaAEditar.hora;
             }
         }
-        
+
+        // ============================================
+        // FUNCIÓN PRINCIPAL: GUARDAR CITA
+        // ============================================
         function guardarCita() {
             console.log('Guardando cita');
             
-            // Validar campos requeridos
-            if (!validarFormularioCompleto()) {
-                Swal.fire({
+            if (!validarFormularioCompleto()) {                    // Valida campos requeridos
+                Swal.fire({                                         // Muestra alerta de error
                     icon: 'warning',
                     title: 'Campos incompletos',
                     text: 'Por favor, completa todos los campos requeridos correctamente.',
@@ -866,6 +893,7 @@
                 return;
             }
             
+            // Obtiene valores de todos los campos
             const id = parseInt(document.getElementById('citaId').value);
             const nombreMascota = document.getElementById('nombreMascota').value.trim();
             const tipoMascota = document.getElementById('tipoMascota').value;
@@ -874,7 +902,7 @@
             const fechaCita = document.getElementById('fechaCita').value;
             const horaCita = document.getElementById('horaCita').value;
             const sintomas = document.getElementById('sintomas').value.trim();
-            const estado = citaAEditar ? document.getElementById('estadoCita').value : 'abierta';
+            const estado = citaAEditar ? document.getElementById('estadoCita').value : 'abierta';  // Si es nueva, estado="abierta"
             
             // Validar teléfono (solo números)
             if (!/^\d+$/.test(telefono)) {
@@ -936,6 +964,7 @@
                 return;
             }
             
+            // Crear objeto con los datos
             const nuevaCita = { 
                 id, 
                 nombreMascota, 
@@ -948,35 +977,35 @@
                 estado 
             };
             
-            if (citaAEditar) {
+            if (citaAEditar) {                                     // Si es edición
                 const indice = citas.findIndex(c => c.id === citaAEditar.id);
-                if (indice !== -1) citas[indice] = nuevaCita;
+                if (indice !== -1) citas[indice] = nuevaCita;     // Reemplaza la cita existente
                 console.log('Cita actualizada:', nuevaCita);
-            } else {
-                citas.push(nuevaCita);
+            } else {                                                // Si es nueva
+                citas.push(nuevaCita);                              // Agrega al final del array
                 console.log('Nueva cita agregada:', nuevaCita);
             }
             
-            guardarCitas();
-            mostrarCitas();
-            actualizarResumen();
+            guardarCitas();                                         // Guarda en localStorage
+            mostrarCitas();                                         // Actualiza pantalla
+            actualizarResumen();                                    // Actualiza contadores
             
             const modalElement = document.getElementById('modalCita');
             if (modalElement) {
                 const modal = bootstrap.Modal.getInstance(modalElement);
-                if (modal) modal.hide();
+                if (modal) modal.hide();                            // Cierra el modal
             }
             
             mostrarMensajeExito(citaAEditar ? 'Cita actualizada correctamente' : 'Cita guardada correctamente');
         }
-        
-        function validarFormularioCompleto() {
+
+        function validarFormularioCompleto() {                     // Valida todos los campos requeridos
             let valido = true;
             let primerCampoInvalido = null;
             
             limpiarValidaciones();
             
-            const camposRequeridos = [
+            const camposRequeridos = [                             // Lista de campos a validar
                 {id: 'nombreMascota', nombre: 'nombre de la mascota'},
                 {id: 'tipoMascota', nombre: 'tipo de mascota'},
                 {id: 'nombrePropietario', nombre: 'nombre del propietario'},
@@ -1002,53 +1031,48 @@
             }
             
             if (!valido && primerCampoInvalido) {
-                primerCampoInvalido.focus();
+                primerCampoInvalido.focus();                        // Pone el foco en el primer campo inválido
                 return false;
             }
             
             return true;
         }
-        
-        function limpiarValidaciones() {
+
+        function limpiarValidaciones() {                           // Quita todas las validaciones
             document.querySelectorAll('.is-invalid').forEach(e => e.classList.remove('is-invalid'));
             document.querySelectorAll('.validation-message').forEach(e => e.classList.remove('show'));
         }
-        
-        // Cambiar estado de cita
-        function cambiarEstadoCita(id, nuevoEstado) {
+
+        // ============================================
+        // FUNCIONES PARA CAMBIAR ESTADO - ¡LAS QUE ARREGLAMOS!
+        // ============================================
+        function cambiarEstadoCita(id, nuevoEstado) {              // Cambia el estado de una cita
             console.log('Cambiando estado de cita:', id, 'a', nuevoEstado);
             
-            // Buscar la cita por ID
-            const citaIndex = citas.findIndex(c => c.id == id);
+            const citaIndex = citas.findIndex(c => c.id == id);    // Busca la cita por ID
             if (citaIndex === -1) {
                 console.error('Cita no encontrada:', id);
                 return;
             }
             
-            // Actualizar el estado
-            citas[citaIndex].estado = nuevoEstado;
+            citas[citaIndex].estado = nuevoEstado;                 // Actualiza el estado
             
-            // Guardar en localStorage
-            guardarCitas();
+            guardarCitas();                                         // Guarda cambios
+            mostrarCitas();                                         // Actualiza pantalla
+            actualizarResumen();                                    // Actualiza contadores
             
-            // Actualizar la vista
-            mostrarCitas();
-            actualizarResumen();
-            
-            // Mostrar mensaje de éxito
-            let mensajeEstado = '';
+            let mensajeEstado = '';                                 // Mensaje según el nuevo estado
             if (nuevoEstado === 'abierta') mensajeEstado = 'Cita marcada como Abierta';
             else if (nuevoEstado === 'terminada') mensajeEstado = 'Cita marcada como Terminada';
             else mensajeEstado = 'Cita marcada como Anulada';
             
             mostrarMensajeExito(mensajeEstado);
             
-            // Cerrar el dropdown
             const dropdown = document.getElementById('dropdownEstado-' + id);
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) dropdown.classList.remove('show');       // Cierra el menú
         }
-        
-        function toggleEstadoDropdown(id) {
+
+        function toggleEstadoDropdown(id) {                         // Abre/cierra el menú de estados
             console.log('Toggle dropdown para cita:', id);
             
             // Cerrar todos los otros dropdowns
@@ -1061,22 +1085,27 @@
             // Toggle el dropdown actual
             const dropdown = document.getElementById('dropdownEstado-' + id);
             if (dropdown) {
-                dropdown.classList.toggle('show');
+                dropdown.classList.toggle('show');                  // Si está abierto lo cierra, si está cerrado lo abre
                 console.log('Dropdown toggled:', dropdown.classList.contains('show') ? 'abierto' : 'cerrado');
             } else {
                 console.error('Dropdown no encontrado para ID:', id);
             }
         }
-        
-        // Mostrar citas
+
+        // ============================================
+        // FUNCIÓN PARA MOSTRAR CITAS
+        // ============================================
         function mostrarCitas() {
             const listaCitas = document.getElementById('listaCitas');
             if (!listaCitas) return;
             
+            // Aplicar filtro
             let citasFiltradas = filtroActual === 'todas' ? citas : citas.filter(c => c.estado === filtroActual);
+            
+            // Ordenar por fecha y hora (más próximas primero)
             citasFiltradas.sort((a, b) => new Date(a.fecha + 'T' + a.hora) - new Date(b.fecha + 'T' + b.hora));
             
-            if (citasFiltradas.length === 0) {
+            if (citasFiltradas.length === 0) {                      // Si no hay citas
                 let mensaje = '';
                 if (filtroActual === 'todas') {
                     mensaje = 'No hay citas programadas. Comienza agregando una nueva cita.';
@@ -1090,18 +1119,21 @@
             
             let citasHTML = '';
             
-            citasFiltradas.forEach(c => {
+            citasFiltradas.forEach(c => {                            // Recorre cada cita y genera HTML
+                // Formatear fecha
                 const fechaObj = new Date(c.fecha);
                 const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
                 
+                // Formatear hora
                 const [horas, minutos] = c.hora.split(':');
                 const horaNum = parseInt(horas);
                 const horaFormato12 = horaNum > 12 ? horaNum - 12 : horaNum;
                 const amPm = horaNum >= 12 ? 'PM' : 'AM';
                 const horaFormateada = `${horaFormato12}:${minutos} ${amPm}`;
                 
-                const gifAnimal = animalGifs[c.tipoMascota] || animalGifs['Otro'];
+                const gifAnimal = animalGifs[c.tipoMascota] || animalGifs['Otro'];  // GIF según tipo
                 
+                // Determinar clases según estado
                 let estadoClase = '', estadoTexto = '', estadoBadge = '';
                 if (c.estado === 'abierta') { estadoClase = ''; estadoTexto = 'Abierta'; estadoBadge = 'estado-abierta'; }
                 else if (c.estado === 'terminada') { estadoClase = 'terminada'; estadoTexto = 'Terminada'; estadoBadge = 'estado-terminada'; }
@@ -1109,6 +1141,7 @@
                 
                 const iconoAnimal = animalIcons[c.tipoMascota] || 'bi-bug';
                 
+                // Generar HTML de la tarjeta
                 citasHTML += `
                     <div class="card cita-card ${estadoClase}">
                         <div class="card-body">
@@ -1120,6 +1153,7 @@
                                             <h5 class="card-title mb-1 title-font"><i class="bi ${iconoAnimal}" style="color: var(--secondary-color);"></i> ${c.nombreMascota} - ${c.tipoMascota}</h5>
                                             <p class="text-muted mb-1 accent-font"><i class="bi bi-person" style="color: var(--primary-color);"></i> Propietario: ${c.nombrePropietario}</p>
                                         </div>
+                                        <!-- BOTÓN DE ESTADO QUE ARREGLAMOS -->
                                         <div class="dropdown-estado">
                                             <button class="estado-badge ${estadoBadge} accent-font" onclick="toggleEstadoDropdown(${c.id})">${estadoTexto} <i class="bi bi-chevron-down"></i></button>
                                             <div class="dropdown-estado-content" id="dropdownEstado-${c.id}">
@@ -1146,9 +1180,12 @@
                 `;
             });
             
-            listaCitas.innerHTML = citasHTML;
+            listaCitas.innerHTML = citasHTML;                       // Inserta todo el HTML en el contenedor
         }
-        
+
+        // ============================================
+        // FUNCIÓN PARA ACTUALIZAR RESUMEN
+        // ============================================
         function actualizarResumen() {
             const total = citas.length;
             const abiertas = citas.filter(c => c.estado === 'abierta').length;
@@ -1165,13 +1202,16 @@
             if (terminadasElement) terminadasElement.textContent = terminadas;
             if (anuladasElement) anuladasElement.textContent = anuladas;
         }
-        
-        function mostrarMensajeExito(mensaje) {
+
+        // ============================================
+        // FUNCIÓN PARA MOSTRAR MENSAJES
+        // ============================================
+        function mostrarMensajeExito(mensaje) {                     // Muestra notificación con SweetAlert
             Swal.fire({
                 icon: 'success',
                 title: '¡Éxito!',
                 text: mensaje,
-                timer: 2000,
+                timer: 2000,                                         // Desaparece después de 2 segundos
                 showConfirmButton: false,
                 background: '#FFFDE7',
                 color: '#5D4037',
@@ -1179,11 +1219,14 @@
             });
         }
 
-        // Hacer funciones globales para los onclick
+        // ============================================
+        // EXPORTAR FUNCIONES AL ÁMBITO GLOBAL - ¡CRÍTICO!
+        // ============================================
+        // Esto hace que las funciones sean accesibles desde los onclick en el HTML
         window.mostrarModalEditarCita = mostrarModalEditarCita;
         window.mostrarModalEliminarCita = mostrarModalEliminarCita;
-        window.toggleEstadoDropdown = toggleEstadoDropdown;
-        window.cambiarEstadoCita = cambiarEstadoCita;
+        window.toggleEstadoDropdown = toggleEstadoDropdown;         // ¡LA QUE ARREGLAMOS!
+        window.cambiarEstadoCita = cambiarEstadoCita;               // ¡LA QUE ARREGLAMOS!
     </script>
 </body>
 </html>
