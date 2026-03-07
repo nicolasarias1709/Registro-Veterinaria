@@ -685,8 +685,10 @@
             fi.min = tom.toISOString().split('T')[0];
             fi.addEventListener('input', validarFechaCita);
         });
+        //"Este bloque es el punto de arranque de la aplicación. Espera a que el HTML cargue, luego conecta el botón principal, carga los datos guardados, 
+        // activa todos los eventos, pone el año en el footer, y configura el campo de fecha para que solo acepte fechas futuras."
 
-        function guardarCitas() { localStorage.setItem('citasVeterinarias', JSON.stringify(citas)); }
+        function guardarCitas() { localStorage.setItem('citasVeterinarias', JSON.stringify(citas)); } //Convierte las citas a texto y las guarda en el navegador
 
         function cargarCitas() {
             const g = localStorage.getItem('citasVeterinarias');
@@ -700,6 +702,8 @@
             ];
             if (!g) guardarCitas();
             mostrarCitas();
+            //guardarCitas convierte el array de citas a texto y lo guarda en el navegador. 
+            //cargarCitas hace lo contrario: al abrir la página revisa si ya hay citas guardadas y las carga; si no hay ninguna, usa unas citas de ejemplo para que la página no aparezca vacía.
         }
 
         function inicializarEventos() {
@@ -713,6 +717,8 @@
                 if (!e.target.closest('.dropdown-estado'))
                     document.querySelectorAll('.dropdown-estado-content').forEach(d => d.classList.remove('show'));
             });
+            //inicializarEventos conecta cada botón con su función correspondiente. También configura que al hacer clic en el botón de filtros se abra o cierre el menú,
+            // que al cambiar la fecha se actualicen los horarios, y que al hacer clic en cualquier parte fuera de un menú abierto, ese menú se cierre automáticamente
             document.querySelectorAll('#dropdownFiltros .btn').forEach(btn => btn.addEventListener('click', function() {
                 document.querySelectorAll('#dropdownFiltros .btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
@@ -721,6 +727,8 @@
                 document.getElementById('dropdownFiltros').classList.remove('show');
                 mostrarCitas();
             }));
+            //Este bloque recorre todos los botones del menú de filtros y les asigna un evento clic. Cuando el usuario elige uno, le quita el resaltado a todos los botones,
+            // resalta solo el elegido, guarda el filtro activo en una variable, actualiza el texto visible afuera del menú, lo cierra, y vuelve a mostrar las citas aplicando el nuevo filtro.
             document.querySelectorAll('#formCita input,#formCita select,#formCita textarea').forEach(i => {
                 i.addEventListener('input', function() {
                     validarCampo(this);
@@ -733,14 +741,16 @@
                 i.addEventListener('change', function() { validarCampo(this); });
             });
         }
-
+//Este bloque recorre todos los campos del formulario y les asigna validación en tiempo real. Cada vez que el usuario escribe, se verifica si el campo está vacío.
+// Además tiene una validación especial para el teléfono que usa una expresión regular para asegurarse de que solo contenga números, mostrando un error de inmediato si escribe letras o símbolos.
         function validarCampo(el) {
             const err = document.getElementById('error-' + el.id);
             const vacio = el.value.trim() === '' || (el.tagName === 'SELECT' && el.value === '');
             el.classList.toggle('is-invalid', vacio);
             if (err) { err.classList.toggle('show', vacio); if (vacio) err.textContent = 'Campo requerido'; }
         }
-
+//validarCampo recibe un campo del formulario, verifica si está vacío usando .trim() para ignorar espacios, 
+// y dependiendo del resultado agrega o quita el borde rojo con toggle. También muestra u oculta el mensaje de error correspondiente automáticamente.
         function validarFechaCita() {
             const fi = document.getElementById('fechaCita');
             if (!fi?.value) return false;
@@ -751,7 +761,8 @@
             if (err) { err.classList.toggle('show', invalida); if (invalida) err.textContent = 'Debe ser posterior a hoy'; }
             return !invalida;
         }
-
+//validarFechaCita toma la fecha elegida por el usuario y la compara con la fecha de hoy, eliminando las horas de ambas para comparar solo por día.
+// Si la fecha es igual o anterior a hoy, marca el campo en rojo y muestra el mensaje de error. Devuelve true si es válida o false si no lo es
         function mostrarModalNuevaCita() {
             citaAEditar = null;
             document.getElementById('modalCitaLabel').textContent = 'Agendar Nueva Cita';
@@ -764,7 +775,8 @@
             generarHorariosDisponibles();
             new bootstrap.Modal(document.getElementById('modalCita')).show();
         }
-
+//mostrarModalNuevaCita prepara el formulario para crear una cita nueva: indica que no hay cita en edición, limpia todos los campos, oculta el selector de estado,
+//  genera un ID único con la hora actual, pone mañana como fecha por defecto, genera los horarios disponibles y finalmente abre la ventana flotante.
         function mostrarModalEditarCita(id) {
             citaAEditar = citas.find(c => c.id == id);
             if (!citaAEditar) return;
@@ -782,12 +794,14 @@
             setTimeout(() => document.getElementById('horaCita').value = citaAEditar.hora, 100);
             new bootstrap.Modal(document.getElementById('modalCita')).show();
         }
-
+//mostrarModalEditarCita recibe el ID de la cita a editar, la busca en el array con .find(), y si la encuentra rellena cada campo del formulario con sus datos. 
+//Muestra el selector de estado que en citas nuevas está oculto, y usa setTimeout para seleccionar la hora correcta después de que el desplegable termine de generarse.
         function mostrarModalEliminarCita(id) {
             citaAEliminar = id;
             new bootstrap.Modal(document.getElementById('modalConfirmarEliminar')).show();
         }
-
+//mostrarModalEliminarCita recibe el ID de la cita a eliminar, lo guarda en una variable global para usarlo después,
+//  y abre la ventana de confirmación. No elimina nada directamente — solo prepara el ID y espera a que el usuario confirme.
         function confirmarEliminarCita() {
             if (!citaAEliminar) return;
             citas = citas.filter(c => c.id != citaAEliminar);
@@ -796,7 +810,8 @@
             bootstrap.Modal.getInstance(document.getElementById('modalConfirmarEliminar')).hide();
             citaAEliminar = null;
         }
-
+//confirmarEliminarCita verifica que haya un ID guardado, luego usa .filter() para crear un nuevo array sin la cita eliminada,
+//  guarda los cambios, actualiza la pantalla y los contadores, muestra la notificación de éxito, cierra la ventana de confirmación y limpia la variable global.
         function generarHorariosDisponibles() {
             const fecha = document.getElementById('fechaCita').value;
             const sel = document.getElementById('horaCita');
@@ -820,7 +835,9 @@
             }
             if (citaAEditar?.fecha === fecha) sel.value = citaAEditar.hora;
         }
-
+//generarHorariosDisponibles toma la fecha elegida y genera todos los horarios de 8:00 AM a 8:00 PM cada 30 minutos. 
+// Para cada horario verifica si ya hay una cita ese día a esa hora y si es así lo marca como ocupado y lo desactiva. Si se está editando una cita, 
+//su propio horario no se cuenta como ocupado.
         function guardarCita() {
             if (!validarFormularioCompleto()) { Swal.fire({icon:'warning',title:'Campos incompletos',text:'Completa todos los campos requeridos.',confirmButtonColor:'#FFC107',background:'#FFFDE7',color:'#5D4037',iconColor:'#FFC107'}); return; }
             const g = id => document.getElementById(id);
@@ -841,7 +858,9 @@
             bootstrap.Modal.getInstance(g('modalCita')).hide();
             mostrarMensajeExito(citaAEditar ? 'Cita actualizada correctamente' : 'Cita guardada correctamente');
         }
-
+//guardarCita es la función principal del formulario. Primero valida que todos los campos estén llenos, luego valida el teléfono,
+//  la fecha y el horario uno por uno. Si todo pasa, construye el objeto de la cita y lo guarda en el array — reemplazando si es edición o agregando al final si es nueva
+// . Finalmente actualiza la pantalla, cierra el modal y muestra el mensaje de éxito
         function validarFormularioCompleto() {
             limpiarValidaciones();
             let primer = null;
@@ -856,7 +875,8 @@
             if (primer) { primer.focus(); return false; }
             return true;
         }
-
+//validarFormularioCompleto limpia los errores anteriores y recorre una lista de IDs verificando que cada campo tenga contenido. Si encuentra alguno vacío lo marca
+// en rojo y guarda el primero encontrado. Al terminar, si hubo errores lleva el cursor al primer campo vacío y devuelve false. Si todo estaba lleno devuelve true
         function limpiarValidaciones() {
             document.querySelectorAll('.is-invalid').forEach(e => e.classList.remove('is-invalid'));
             document.querySelectorAll('.validation-message').forEach(e => e.classList.remove('show'));
@@ -875,7 +895,8 @@
             document.querySelectorAll('.dropdown-estado-content').forEach(d => { if (d.id!=='dropdownEstado-'+id) d.classList.remove('show'); });
             document.getElementById('dropdownEstado-'+id)?.classList.toggle('show');
         }
-
+//limpiarValidaciones quita todos los bordes rojos y mensajes de error de golpe.
+//  cambiarEstadoCita encuentra la cita por ID, le cambia el estado, guarda y actualiza todo, y muestra el mensaje usando un diccionario en vez de if/else. toggleEstadoDropdown cierra todos los menús de estado abiertos y abre o cierra el que se clickeó
         function mostrarCitas() {
             const lista = document.getElementById('listaCitas');
             if (!lista) return;
@@ -886,6 +907,8 @@
                 lista.innerHTML = `<div class="empty-state"><i class="bi bi-calendar-x"></i><h4 class="title-font">Sin citas</h4><p class="accent-font">${msg}</p></div>`;
                 return;
             }
+            //mostrarCitas filtra el array según el estado activo, lo ordena por fecha y hora, y si está vacío muestra un mensaje. Si hay citas, usa .map() para convertir cada una en una tarjeta HTML — formateando la fecha en español, 
+            // convirtiendo la hora a formato 12h, buscando el GIF e ícono del animal, y armando el badge de estado. Al final une todo y lo inserta en el contenedor de la página.
             lista.innerHTML = cf.map(c => {
                 const fecha = new Date(c.fecha).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
                 const [hh,mm] = c.hora.split(':'); const h = parseInt(hh);
@@ -893,7 +916,8 @@
                 const gif = animalGifs[c.tipoMascota]||animalGifs['Otro'];
                 const icono = animalIcons[c.tipoMascota]||'bi-bug';
                 const estadoTexto = c.estado==='abierta'?'Abierta':c.estado==='terminada'?'Terminada':'Anulada';
-                return `
+                return 
+                `
                     <div class="card cita-card ${c.estado==='abierta'?'':c.estado}">
                         <div class="card-body">
                             <div class="cita-header">
@@ -928,7 +952,10 @@
                         </div>
                     </div>`;
             }).join('');
-        }
+        }//Este bloque es el molde HTML de cada tarjeta. Usa template literals con ${} para insertar los datos reales de cada cita — 
+        // el color de la tarjeta según el estado, el GIF del animal, el nombre, propietario, teléfono, fecha formateada en español, hora en formato 12h,
+        //  síntomas, el badge de estado con su menú desplegable, y los botones de editar y eliminar. 
+        // Cada elemento interactivo recibe el ID de su cita para que las acciones afecten solo a esa tarjeta.
 
         function actualizarResumen() {
             document.getElementById('totalCitas').textContent     = citas.length;
@@ -948,3 +975,6 @@
     </script>
 </body>
 </html>
+//actualizarResumen usa .filter() y .length para contar las citas por estado y actualizar los cuatro contadores de la parte superior. 
+mostrarMensajeExito usa SweetAlert2 para mostrar una notificación que se cierra sola a los 2 segundos.
+ Finalmente, las cuatro líneas de window registran las funciones globalmente para que los botones generados dinámicamente en las tarjetas puedan ejecutarlas.
