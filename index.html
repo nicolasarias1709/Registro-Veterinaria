@@ -9,97 +9,219 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ESTILOS CSS - Mantienen la interfaz bonita y responsiva */
         :root {
-            --primary-color: #FFC107; --secondary-color: #FF9800; --accent-color: #FFEB3B;
-            --success-color: #4CAF50; --danger-color: #F44336; --light-color: #FFFDE7;
-            --dark-color: #FF8F00; --card-bg: #FFFFFF; --body-bg: #FFF9C4; --text-color: #5D4037;
+            --primary-color: #FFC107;
+            --secondary-color: #FF9800;
+            --accent-color: #FFEB3B;
+            --success-color: #4CAF50;
+            --danger-color: #F44336;
+            --light-color: #FFFDE7;
+            --dark-color: #FF8F00;
+            --card-bg: #FFFFFF;
+            --body-bg: #FFF9C4;
+            --text-color: #5D4037;
         }
-        body { background: var(--body-bg); font-family: 'Nunito', sans-serif; color: var(--text-color); min-height: 100vh; font-weight: 500; }
+
+        body {
+            background: var(--body-bg);
+            font-family: 'Nunito', sans-serif;
+            color: var(--text-color);
+            min-height: 100vh;
+            font-weight: 500;
+        }
+
         .title-font { font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: -0.5px; }
         .subtitle-font { font-family: 'Quicksand', sans-serif; font-weight: 600; font-style: italic; }
         .accent-font { font-family: 'Nunito', sans-serif; font-weight: 700; font-style: italic; }
-        
+
         .header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), #FFB300);
-            color: var(--text-color); padding: 1.5rem 0; margin-bottom: 2.5rem;
-            box-shadow: 0 4px 20px rgba(255,152,0,.2); position: relative; overflow: hidden;
+            color: var(--text-color);
+            padding: 1.5rem 0;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 20px rgba(255,152,0,.2);
+            position: relative;
+            overflow: hidden;
             border-bottom: 6px solid var(--accent-color);
         }
+
         .header::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%235D4037' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
             opacity: .08;
         }
+
         .logo-container { text-align: center; margin-bottom: .5rem; }
+
         .main-title {
-            font-family: 'Poppins', sans-serif; font-size: 3.5rem; font-weight: 900; letter-spacing: 1.5px;
-            margin: 0; color: var(--text-color); text-shadow: 3px 3px 6px rgba(93,64,55,.3);
-            position: relative; display: inline-block; padding: 0 1.5rem; text-transform: uppercase;
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            margin: 0;
+            color: var(--text-color);
+            text-shadow: 3px 3px 6px rgba(93,64,55,.3);
+            position: relative;
+            display: inline-block;
+            padding: 0 1.5rem;
+            text-transform: uppercase;
             animation: titleGlow 4s infinite alternate;
         }
-        .main-title::before { content: '🐾'; position: absolute; left: -45px; top: 50%; transform: translateY(-50%); font-size: 2rem; opacity: .9; color: var(--secondary-color); }
-        .main-title::after { content: '🐾'; position: absolute; right: -45px; top: 50%; transform: translateY(-50%); font-size: 2rem; opacity: .9; color: var(--secondary-color); }
-        .subtitle { font-family: 'Quicksand', sans-serif; font-size: 1.5rem; font-weight: 700; font-style: italic; color: var(--text-color); letter-spacing: .8px; margin-bottom: 0; opacity: .95; }
-        
-        .filtros-container { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-        .menu-toggle {
-            background: linear-gradient(135deg, var(--primary-color), #FFB300); border: none;
-            padding: .6rem 1rem; border-radius: 8px; color: var(--text-color); font-weight: 700;
-            font-family: 'Nunito', sans-serif; cursor: pointer; transition: all .3s ease;
-            display: flex; align-items: center; gap: .5rem; box-shadow: 0 3px 8px rgba(255,193,7,.2);
-            border: 1px solid rgba(255,255,255,.3);
+
+        .main-title::before { content: '🐾'; position: absolute; left: -45px; top: 50%; transform: translateY(-50%); font-size: 2rem; opacity: .9; }
+        .main-title::after  { content: '🐾'; position: absolute; right: -45px; top: 50%; transform: translateY(-50%); font-size: 2rem; opacity: .9; }
+
+        .subtitle {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-style: italic;
+            color: var(--text-color);
+            letter-spacing: .8px;
+            margin-bottom: 0;
+            opacity: .95;
         }
-        .menu-toggle:hover { background: linear-gradient(135deg, #FFB300, var(--primary-color)); transform: translateY(-2px); box-shadow: 0 5px 12px rgba(255,193,7,.3); }
+
+        .filtros-container { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+
+        .menu-toggle {
+            background: linear-gradient(135deg, var(--primary-color), #cfc6af);
+            border: 1px solid rgba(255,255,255,.3);
+            padding: .6rem 1rem;
+            border-radius: 8px;
+            color: var(--text-color);
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            transition: all .3s ease;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            box-shadow: 0 3px 8px rgba(255,193,7,.2);
+        }
+
+        .menu-toggle:hover {
+            background: linear-gradient(135deg, #FFB300, var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(255,193,7,.3);
+        }
+
         .menu-icon { display: flex; flex-direction: column; gap: 4px; }
         .menu-icon span { width: 25px; height: 2.5px; background-color: var(--text-color); border-radius: 2px; }
+
         .filtros-dropdown { position: relative; display: inline-block; }
-        
+
         .dropdown-content {
-            display: none; position: absolute; background: #fff; min-width: 220px;
-            box-shadow: 0 6px 20px rgba(255,152,0,.15); border-radius: 10px; padding: .8rem;
-            z-index: 1000; border: 1px solid rgba(255,193,7,.3); top: 100%; left: 0; margin-top: .5rem;
+            display: none;
+            position: absolute;
+            background: #fff;
+            min-width: 220px;
+            box-shadow: 0 6px 20px rgba(255,152,0,.15);
+            border-radius: 10px;
+            padding: .8rem;
+            z-index: 1000;
+            border: 1px solid rgba(255,193,7,.3);
+            top: 100%;
+            left: 0;
+            margin-top: .5rem;
         }
+
         .dropdown-content.show { display: block; animation: fadeIn .3s ease; }
+
         .dropdown-content .btn {
-            display: block; width: 100%; text-align: left; margin-bottom: .4rem; padding: .5rem .8rem;
-            border-radius: 6px; transition: all .3s ease; font-weight: 600;
-            font-family: 'Nunito', sans-serif; border: 1px solid rgba(255,193,7,.2); color: var(--text-color);
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: .4rem;
+            padding: .5rem .8rem;
+            border-radius: 6px;
+            transition: all .3s ease;
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            border: 1px solid rgba(255,193,7,.2);
+            color: var(--text-color);
         }
+
         .dropdown-content .btn:hover { transform: translateX(3px); background-color: var(--light-color); }
-        .dropdown-content .btn.active { background: linear-gradient(135deg, var(--secondary-color), #FF8F00); color: #fff; border-color: var(--secondary-color); box-shadow: 0 3px 6px rgba(255,152,0,.2); }
+        .dropdown-content .btn.active {
+            background: linear-gradient(135deg, var(--secondary-color), #FF8F00);
+            color: #fff;
+            border-color: var(--secondary-color);
+            box-shadow: 0 3px 6px rgba(255,152,0,.2);
+        }
+
         .filtro-activo {
-            background: linear-gradient(135deg, var(--primary-color), #FFB300); color: var(--text-color);
-            padding: .5rem 1rem; border-radius: 8px; font-weight: 700; font-family: 'Nunito', sans-serif;
-            border: 1px solid rgba(255,255,255,.3); display: flex; align-items: center; gap: .5rem;
+            background: linear-gradient(135deg, var(--primary-color), #FFB300);
+            color: var(--text-color);
+            padding: .5rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            border: 1px solid rgba(255,255,255,.3);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
             box-shadow: 0 2px 6px rgba(255,193,7,.2);
         }
-        
-        .citas-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .card {
-            border-radius: 12px; box-shadow: 0 4px 15px rgba(255,152,0,.08); border: 1px solid rgba(255,193,7,.2);
-            transition: all .3s ease; background: var(--card-bg); overflow: hidden;
-            border-top: 4px solid var(--secondary-color); height: 100%; display: flex; flex-direction: column;
+
+        .citas-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255,152,0,.08);
+            border: 1px solid rgba(255,193,7,.2);
+            transition: all .3s ease;
+            background: var(--card-bg);
+            overflow: hidden;
+            border-top: 4px solid var(--secondary-color);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
         .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(255,152,0,.12); border-color: rgba(255,152,0,.4); }
         .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+
         .animal-gif-small {
-            width: 60px; height: 60px; border-radius: 8px; object-fit: cover;
-            border: 2px solid var(--primary-color); box-shadow: 0 2px 8px rgba(255,193,7,.2);
-            margin-right: 15px; float: left;
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 2px 8px rgba(255,193,7,.2);
+            margin-right: 15px;
+            float: left;
         }
+
         .cita-header { display: flex; align-items: flex-start; margin-bottom: 1rem; }
         .cita-info { flex: 1; }
-        
+
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), #FFB300); border: none;
-            padding: .7rem 1.8rem; border-radius: 8px; font-weight: 700; font-family: 'Nunito', sans-serif;
-            letter-spacing: .3px; transition: all .3s ease; box-shadow: 0 3px 10px rgba(255,193,7,.2);
-            color: var(--text-color); border: 1px solid rgba(255,255,255,.3);
+            background: linear-gradient(135deg, var(--primary-color), #FFB300);
+            border: 1px solid rgba(255,255,255,.3);
+            padding: .7rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            letter-spacing: .3px;
+            transition: all .3s ease;
+            box-shadow: 0 3px 10px rgba(255,193,7,.2);
+            color: var(--text-color);
         }
-        .btn-primary:hover { background: linear-gradient(135deg, #FFB300, var(--primary-color)); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,193,7,.3); }
-        
-        /* BOTÓN NUEVA CITA - MEJORADO */
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #FFB300, var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,193,7,.3);
+        }
+
         .btn-nueva-cita {
             background: linear-gradient(135deg, #FFB300, var(--primary-color));
             border: 2px solid var(--text-color);
@@ -118,145 +240,216 @@
             position: relative;
             overflow: hidden;
         }
-        .btn-nueva-cita:hover { 
+
+        .btn-nueva-cita:hover {
             background: linear-gradient(135deg, var(--primary-color), #FFB300);
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 12px 30px rgba(255,152,0,0.6);
             border-color: #fff;
             color: #fff;
         }
-        .btn-nueva-cita i {
-            font-size: 1.8rem;
-            margin-right: 10px;
-            animation: pulse 2s infinite;
-        }
-        
+
+        .btn-nueva-cita i { font-size: 1.8rem; margin-right: 10px; animation: pulse 2s infinite; }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.2); }
         }
-        
-        /* Contenedor del botón */
-        .boton-container {
-            display: flex;
-            justify-content: center;
-            margin: 2.5rem 0 1.5rem 0;
-        }
-        
+
+        .boton-container { display: flex; justify-content: center; margin: 2.5rem 0 1.5rem 0; }
+
         .btn-outline-primary {
-            border: 1px solid var(--primary-color); color: var(--text-color); font-weight: 600;
-            font-family: 'Nunito', sans-serif; border-radius: 6px; transition: all .3s ease;
+            border: 1px solid var(--primary-color);
+            color: var(--text-color);
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            border-radius: 6px;
+            transition: all .3s ease;
             background: rgba(255,193,7,.1);
         }
-        .btn-outline-primary:hover { background: linear-gradient(135deg, var(--primary-color), #FFB300); color: var(--text-color); transform: translateY(-2px); box-shadow: 0 3px 8px rgba(255,193,7,.2); }
-        
+
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, var(--primary-color), #FFB300);
+            color: var(--text-color);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(255,193,7,.2);
+        }
+
         .cita-card { border-left: 5px solid var(--primary-color); position: relative; overflow: hidden; }
         .cita-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            opacity: 0; transition: opacity .3s ease;
+            opacity: 0;
+            transition: opacity .3s ease;
         }
         .cita-card:hover::before { opacity: 1; }
         .cita-card.terminada { border-left-color: var(--success-color); }
         .cita-card.terminada::before { background: linear-gradient(90deg, var(--success-color), #66BB6A); }
         .cita-card.anulada { border-left-color: var(--danger-color); }
         .cita-card.anulada::before { background: linear-gradient(90deg, var(--danger-color), #E53935); }
-        
+
         .estado-badge {
-            padding: .4rem 1rem; border-radius: 20px; font-size: .8rem; font-weight: 700;
-            font-family: 'Nunito', sans-serif; letter-spacing: .3px; box-shadow: 0 2px 5px rgba(93,64,55,.1);
-            cursor: pointer; transition: all 0.3s ease;
+            padding: .4rem 1rem;
+            border-radius: 20px;
+            font-size: .8rem;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            letter-spacing: .3px;
+            box-shadow: 0 2px 5px rgba(93,64,55,.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
             border: none;
         }
         .estado-badge:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-        .estado-abierta { background: linear-gradient(135deg, var(--primary-color), #FFB300); color: var(--text-color); border: 1px solid rgba(255,255,255,.3); }
+        .estado-abierta   { background: linear-gradient(135deg, var(--primary-color), #FFB300); color: var(--text-color); border: 1px solid rgba(255,255,255,.3); }
         .estado-terminada { background: linear-gradient(135deg, var(--success-color), #66BB6A); color: #fff; border: 1px solid rgba(255,255,255,.2); }
-        .estado-anulada { background: linear-gradient(135deg, var(--danger-color), #E53935); color: #fff; border: 1px solid rgba(255,255,255,.2); }
-        
+        .estado-anulada   { background: linear-gradient(135deg, var(--danger-color), #E53935); color: #fff; border: 1px solid rgba(255,255,255,.2); }
+
         .modal-header {
             background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: var(--text-color); border-radius: 12px 12px 0 0; padding: 1.2rem 1.5rem;
+            color: var(--text-color);
+            border-radius: 12px 12px 0 0;
+            padding: 1.2rem 1.5rem;
             border-bottom: 1px solid rgba(255,255,255,.3);
         }
         .modal-title { font-weight: 700; font-family: 'Poppins', sans-serif; color: var(--text-color); font-size: 1.3rem; }
         .modal-content { border-radius: 12px; border: 1px solid rgba(255,193,7,.3); box-shadow: 0 8px 30px rgba(255,152,0,.15); }
-        
+
         .footer {
-            background: linear-gradient(135deg, var(--dark-color), #FF8F00); color: var(--text-color);
-            padding: 2rem 0; margin-top: 3rem; text-align: center; position: relative; overflow: hidden;
+            background: linear-gradient(135deg, var(--dark-color), #FF8F00);
+            color: var(--text-color);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
             border-top: 4px solid var(--accent-color);
         }
+
         .footer::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100%;
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 100%;
             background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%235D4037' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
             opacity: .05;
         }
+
         .footer a { color: var(--text-color); text-decoration: underline; font-weight: 700; font-family: 'Nunito', sans-serif; transition: all .3s ease; }
         .footer a:hover { color: #fff; }
-        
+
         .empty-state { text-align: center; padding: 3rem 2rem; color: #8D6E63; grid-column: 1/-1; }
         .empty-state i { font-size: 4rem; margin-bottom: 1.2rem; opacity: .3; color: var(--primary-color); }
         .empty-state h4 { color: var(--text-color); font-weight: 700; font-family: 'Poppins', sans-serif; margin-bottom: .8rem; }
-        
+
         .form-label { font-weight: 700; font-family: 'Nunito', sans-serif; color: var(--text-color); margin-bottom: .5rem; font-size: .95rem; }
         .required::after { content: " *"; color: var(--danger-color); }
+
         .form-control, .form-select {
-            border: 1px solid rgba(255,193,7,.4); border-radius: 8px; padding: .7rem 1rem;
-            transition: all .3s ease; background: #fff; color: var(--text-color);
-            font-family: 'Nunito', sans-serif; font-weight: 500;
+            border: 1px solid rgba(255,193,7,.4);
+            border-radius: 8px;
+            padding: .7rem 1rem;
+            transition: all .3s ease;
+            background: #fff;
+            color: var(--text-color);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 500;
         }
+
         .form-control:focus, .form-select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 .2rem rgba(255,235,59,.3); }
         .form-control.is-invalid, .form-select.is-invalid { border-color: var(--danger-color); }
         .form-select { background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23FFC107' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") no-repeat right 1rem center/16px 12px; cursor: pointer; }
-        
+
         .validation-message {
-            font-size: .8rem; color: var(--danger-color); display: none; margin-top: .25rem;
-            font-weight: 600; font-family: 'Nunito', sans-serif; padding-left: .5rem;
+            font-size: .8rem;
+            color: var(--danger-color);
+            display: none;
+            margin-top: .25rem;
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            padding-left: .5rem;
             border-left: 2px solid var(--danger-color);
         }
         .validation-message.show { display: block; animation: fadeIn .3s ease-in; }
-        
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes titleGlow { 0%,100% { text-shadow: 2px 2px 4px rgba(93,64,55,.2); } 50% { text-shadow: 3px 3px 6px rgba(93,64,55,.3), 0 0 15px rgba(255,235,59,.3); } }
-        
-        .resumen-container { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
-        .resumen-item {
-            background: #fff; border-radius: 10px; padding: .8rem 1.2rem;
-            box-shadow: 0 3px 10px rgba(255,152,0,.08); border: 1px solid rgba(255,193,7,.2);
-            min-width: 130px; text-align: center; transition: all .3s ease;
+        @keyframes titleGlow {
+            0%,100% { text-shadow: 2px 2px 4px rgba(93,64,55,.2); }
+            50% { text-shadow: 3px 3px 6px rgba(93,64,55,.3), 0 0 15px rgba(255,235,59,.3); }
         }
+
+        .resumen-container { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+
+        .resumen-item {
+            background: #fff;
+            border-radius: 10px;
+            padding: .8rem 1.2rem;
+            box-shadow: 0 3px 10px rgba(255,152,0,.08);
+            border: 1px solid rgba(255,193,7,.2);
+            min-width: 130px;
+            text-align: center;
+            transition: all .3s ease;
+        }
+
         .resumen-item:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,152,0,.12); }
         .resumen-titulo { font-size: .85rem; font-weight: 700; font-family: 'Nunito', sans-serif; color: var(--text-color); margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .5px; }
         .resumen-valor { font-size: 1.6rem; font-weight: 800; font-family: 'Poppins', sans-serif; }
-        .resumen-total .resumen-valor { color: var(--text-color); }
-        .resumen-abiertas .resumen-valor { color: var(--primary-color); }
+        .resumen-total .resumen-valor     { color: var(--text-color); }
+        .resumen-abiertas .resumen-valor  { color: var(--primary-color); }
         .resumen-terminadas .resumen-valor { color: var(--success-color); }
-        .resumen-anuladas .resumen-valor { color: var(--danger-color); }
-        
+        .resumen-anuladas .resumen-valor  { color: var(--danger-color); }
+
         .alert-warning { background-color: rgba(255,87,34,.1); border-color: rgba(255,87,34,.2); color: var(--text-color); }
-        .text-muted { color: #8D6E63!important; font-family: 'Nunito', sans-serif; font-weight: 500; font-style: italic; }
+        .text-muted { color: #8D6E63 !important; font-family: 'Nunito', sans-serif; font-weight: 500; font-style: italic; }
         .btn-sm { padding: .25rem .75rem; font-size: .875rem; }
         .card-footer-buttons { margin-top: auto; padding-top: 1rem; }
-        
+
         .dropdown-estado { position: relative; display: inline-block; }
+
         .dropdown-estado-content {
-            display: none; position: absolute; background: #fff; min-width: 160px;
-            box-shadow: 0 6px 20px rgba(255,152,0,.15); border-radius: 8px; padding: .5rem;
-            z-index: 1001; border: 1px solid rgba(255,193,7,.3); right: 0; top: 100%;
+            display: none;
+            position: absolute;
+            background: #fff;
+            min-width: 160px;
+            box-shadow: 0 6px 20px rgba(255,152,0,.15);
+            border-radius: 8px;
+            padding: .5rem;
+            z-index: 1001;
+            border: 1px solid rgba(255,193,7,.3);
+            right: 0; top: 100%;
             margin-top: 5px;
         }
+
         .dropdown-estado-content.show { display: block; animation: fadeIn .2s ease; }
+
         .dropdown-estado-content button {
-            display: block; width: 100%; text-align: left; margin-bottom: .3rem; padding: .5rem .8rem;
-            border-radius: 6px; transition: all .3s ease; font-size: .85rem; font-weight: 600;
-            font-family: 'Nunito', sans-serif; border: none; background: 0 0; color: var(--text-color);
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: .3rem;
+            padding: .5rem .8rem;
+            border-radius: 6px;
+            transition: all .3s ease;
+            font-size: .85rem;
+            font-weight: 600;
+            font-family: 'Nunito', sans-serif;
+            border: none;
+            background: 0 0;
+            color: var(--text-color);
             cursor: pointer;
         }
+
         .dropdown-estado-content button:hover { transform: translateX(3px); background-color: var(--light-color); }
-        .btn-abierta:hover { color: var(--primary-color); background-color: rgba(255,193,7,.15); }
-        .btn-terminada:hover { color: var(--success-color); background-color: rgba(76,175,80,.15); }
-        .btn-anulada:hover { color: var(--danger-color); background-color: rgba(244,67,54,.15); }
-        
+        .btn-abierta:hover    { color: var(--primary-color); background-color: rgba(255,193,7,.15) !important; }
+        .btn-terminada:hover  { color: var(--success-color); background-color: rgba(76,175,80,.15) !important; }
+        .btn-anulada:hover    { color: var(--danger-color);  background-color: rgba(244,67,54,.15) !important; }
+
+        .swal2-popup  { font-family: 'Nunito', sans-serif; }
+        .swal2-title  { font-family: 'Poppins', sans-serif; }
+        .swal2-confirm { background-color: var(--primary-color) !important; color: var(--text-color) !important; }
+
         @media (max-width: 768px) {
             .main-title { font-size: 2.5rem; }
             .main-title::after, .main-title::before { display: none; }
@@ -268,6 +461,7 @@
             .dropdown-estado-content { left: 0; right: auto; }
             .btn-nueva-cita { padding: 1rem 2rem; font-size: 1.2rem; max-width: 300px; }
         }
+
         @media (max-width: 576px) {
             .main-title { font-size: 2rem; }
             .subtitle { font-size: 1rem; }
@@ -275,11 +469,6 @@
             .btn-nueva-cita { padding: .8rem 1.5rem; font-size: 1rem; max-width: 250px; }
             .btn-nueva-cita i { font-size: 1.4rem; }
         }
-        
-        /* Estilo para SweetAlert personalizado */
-        .swal2-popup { font-family: 'Nunito', sans-serif; }
-        .swal2-title { font-family: 'Poppins', sans-serif; }
-        .swal2-confirm { background-color: var(--primary-color) !important; color: var(--text-color) !important; }
     </style>
 </head>
 <body>
@@ -290,14 +479,13 @@
                     <h1 class="main-title title-font">WHISKERWISE</h1>
                 </div>
                 <p class="subtitle subtitle-font text-center">Sabiduría y cuidado para tus mascotas 🐾❤️</p>
-                
-                <!-- BOTÓN NUEVA CITA -->
+
                 <div class="boton-container">
                     <button class="btn-nueva-cita" id="btnNuevaCita" type="button">
                         <i class="bi bi-plus-circle-fill"></i> NUEVA CITA
                     </button>
                 </div>
-                
+
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="text-dark">
                         <h3 class="mb-1 accent-font"><i class="bi bi-telephone-fill" style="color: var(--secondary-color);"></i> 24/7 Emergencias Veterinarias</h3>
@@ -307,11 +495,13 @@
             </div>
         </div>
     </header>
-    
+
     <main class="container">
         <div class="filtros-container">
             <div class="filtros-dropdown">
-                <button class="menu-toggle accent-font" id="menuToggle"><div class="menu-icon"><span></span><span></span><span></span></div> Filtrar por estado</button>
+                <button class="menu-toggle accent-font" id="menuToggle">
+                    <div class="menu-icon"><span></span><span></span><span></span></div> Filtrar por estado
+                </button>
                 <div class="dropdown-content" id="dropdownFiltros">
                     <button class="btn btn-outline-primary active accent-font" data-estado="todas"><i class="bi bi-list" style="color: var(--primary-color);"></i> Todas las citas</button>
                     <button class="btn btn-outline-primary accent-font" data-estado="abierta"><i class="bi bi-clock" style="color: var(--primary-color);"></i> Abiertas</button>
@@ -319,16 +509,18 @@
                     <button class="btn btn-outline-danger accent-font" data-estado="anulada"><i class="bi bi-x-circle" style="color: var(--danger-color);"></i> Anuladas</button>
                 </div>
             </div>
-            <div class="filtro-activo accent-font" id="filtroActivo"><i class="bi bi-list" style="color: var(--text-color);"></i><span>Todas las citas</span></div>
+            <div class="filtro-activo accent-font" id="filtroActivo">
+                <i class="bi bi-list" style="color: var(--text-color);"></i><span>Todas las citas</span>
+            </div>
         </div>
-        
+
         <div class="resumen-container">
             <div class="resumen-item resumen-total"><div class="resumen-titulo accent-font">Total</div><div class="resumen-valor title-font" id="totalCitas">0</div></div>
             <div class="resumen-item resumen-abiertas"><div class="resumen-titulo accent-font">Abiertas</div><div class="resumen-valor title-font" id="abiertasCitas">0</div></div>
             <div class="resumen-item resumen-terminadas"><div class="resumen-titulo accent-font">Terminadas</div><div class="resumen-valor title-font" id="terminadasCitas">0</div></div>
             <div class="resumen-item resumen-anuladas"><div class="resumen-titulo accent-font">Anuladas</div><div class="resumen-valor title-font" id="anuladasCitas">0</div></div>
         </div>
-        
+
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -346,8 +538,8 @@
             </div>
         </div>
     </main>
-    
-    <!-- Modal para nueva/editar cita -->
+
+    <!-- Modal nueva/editar cita -->
     <div class="modal fade" id="modalCita" tabindex="-1" aria-labelledby="modalCitaLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -431,8 +623,8 @@
             </div>
         </div>
     </div>
-    
-    <!-- Modal para confirmar eliminación -->
+
+    <!-- Modal confirmar eliminación -->
     <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -446,9 +638,7 @@
                         <strong>¿Está seguro que desea eliminar esta cita?</strong>
                         <p class="mb-0 mt-2">Esta acción no se puede deshacer. La cita será eliminada permanentemente del sistema.</p>
                     </div>
-                    <div class="mt-3">
-                        <p class="accent-font"><i class="bi bi-info-circle"></i> Esta acción eliminará todos los datos de la cita seleccionada.</p>
-                    </div>
+                    <p class="accent-font mt-3"><i class="bi bi-info-circle"></i> Esta acción eliminará todos los datos de la cita seleccionada.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary accent-font" data-bs-dismiss="modal">CANCELAR</button>
@@ -457,7 +647,7 @@
             </div>
         </div>
     </div>
-    
+
     <footer class="footer">
         <div class="container">
             <p class="mb-1 title-font"><strong>WHISKERWISE VETERINARIA</strong></p>
@@ -465,302 +655,121 @@
             <p class="mb-0 accent-font">Administrador de Citas Veterinarias &copy; <span id="currentYear"></span> | <a href="https://jagues6.com" target="_blank">Derechos reservados a Jagues6</a></p>
         </div>
     </footer>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ============================================
-        // VARIABLES GLOBALES (se pueden usar en todas las funciones)
-        // ============================================
-        let citas = [];              // Array que guarda TODAS las citas (cada cita es un objeto)
-        let citaAEditar = null;      // Guarda la cita que estamos editando (o null si es nueva)
-        let citaAEliminar = null;    // Guarda el ID de la cita que vamos a eliminar
-        let filtroActual = 'todas';   // Controla qué filtro está activo: 'todas', 'abierta', 'terminada', 'anulada'
+        let citas = [], citaAEditar = null, citaAEliminar = null, filtroActual = 'todas';
 
-        // ============================================
-        // OBJETOS DE CONFIGURACIÓN (para imágenes e iconos)
-        // ============================================
-        const animalGifs = {          // Objeto que mapea cada tipo de animal con su GIF
-            'Perro': 'https://i.pinimg.com/originals/4e/4f/24/4e4f24dd59eeee057dcd2a53eb8d170a.gif',
-            'Gato': 'https://img1.picmix.com/output/stamp/normal/7/3/4/8/1968437_c6c64.gif',
-            'Conejo': 'https://usagif.com/wp-content/uploads/gifs/dancing-rabbit-22.gif',
-            'Hamster': 'https://usagif.com/wp-content/uploads/gifs/hamster-71.gif',
-            'Pájaro': 'https://img1.picmix.com/output/stamp/normal/1/0/8/4/324801_da9ed.gif',
-            'Tortuga': 'https://i.pinimg.com/originals/87/84/a2/8784a2a12fe1341c46e5ff640c6094ae.gif',
-            'Pez': 'https://es-wiki.metin2.gameforge.com/images/f/f7/Peces_animados.gif',
-            'Hurón': 'https://www.gifsanimados.org/data/media/497/huron-imagen-animada-0057.gif',
-            'Cobaya': 'https://www.gifsanimados.org/data/media/1236/cobaya-y-conejillo-de-indias-imagen-animada-0040.gif',
-            'Iguana': 'https://i.pinimg.com/originals/75/90/2a/75902a0a864708e6198f07c33faabdee.gif',
-            'Otro': 'https://img1.picmix.com/output/stamp/normal/1/0/8/4/324801_da9ed.gif'
-        };
-        
-        const animalIcons = {         // Objeto que mapea cada tipo de animal con su ícono de Bootstrap
-            'Perro': 'bi-dog', 'Gato': 'bi-cat', 'Conejo': 'bi-bug', 'Hamster': 'bi-bug',
-            'Pájaro': 'bi-bug', 'Tortuga': 'bi-bug', 'Pez': 'bi-bug', 'Hurón': 'bi-bug',
-            'Cobaya': 'bi-bug', 'Iguana': 'bi-bug', 'Otro': 'bi-bug'
+        const animalGifs = {
+            'Perro':'https://i.pinimg.com/originals/4e/4f/24/4e4f24dd59eeee057dcd2a53eb8d170a.gif',
+            'Gato':'https://img1.picmix.com/output/stamp/normal/7/3/4/8/1968437_c6c64.gif',
+            'Conejo':'https://usagif.com/wp-content/uploads/gifs/dancing-rabbit-22.gif',
+            'Hamster':'https://usagif.com/wp-content/uploads/gifs/hamster-71.gif',
+            'Pájaro':'https://img1.picmix.com/output/stamp/normal/1/0/8/4/324801_da9ed.gif',
+            'Tortuga':'https://i.pinimg.com/originals/87/84/a2/8784a2a12fe1341c46e5ff640c6094ae.gif',
+            'Pez':'https://es-wiki.metin2.gameforge.com/images/f/f7/Peces_animados.gif',
+            'Hurón':'https://www.gifsanimados.org/data/media/497/huron-imagen-animada-0057.gif',
+            'Cobaya':'https://www.gifsanimados.org/data/media/1236/cobaya-y-conejillo-de-indias-imagen-animada-0040.gif',
+            'Iguana':'https://i.pinimg.com/originals/75/90/2a/75902a0a864708e6198f07c33faabdee.gif',
+            'Otro':'https://img1.picmix.com/output/stamp/normal/1/0/8/4/324801_da9ed.gif'
         };
 
-        // ============================================
-        // INICIALIZACIÓN - Se ejecuta cuando la página carga
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {  // Cuando el HTML termina de cargar
-            console.log('DOM Cargado - Inicializando aplicación');  // Mensaje en consola para debug
-            
-            // Configurar botón Nueva Cita
-            const btnNuevaCita = document.getElementById('btnNuevaCita');  // Busca el botón por su ID
-            if (btnNuevaCita) {                                           // Si existe el botón
-                console.log('Botón Nueva Cita encontrado, asignando evento');
-                btnNuevaCita.onclick = function() {                       // Asigna función al hacer clic
-                    console.log('Botón Nueva Cita clickeado - FUNCIONANDO');
-                    mostrarModalNuevaCita();                              // Abre el modal para nueva cita
-                    return false;                                          // Evita comportamiento por defecto
-                };
-            } else {
-                console.error('ERROR: Botón Nueva Cita NO encontrado');   // Error si no encuentra el botón
-            }
-            
-            cargarCitas();                  // Carga las citas guardadas (o crea ejemplos)
-            inicializarEventos();            // Configura todos los eventos (clics, cambios, etc.)
-            actualizarResumen();             // Actualiza los contadores (Total, Abiertas, etc.)
-            
-            document.getElementById('currentYear').textContent = new Date().getFullYear();  // Pone el año actual en el footer
-            
-            // Configurar fecha mínima en el campo de fecha (no permitir fechas pasadas)
-            const fechaInput = document.getElementById('fechaCita');
-            if (fechaInput) {
-                const tomorrow = new Date();                    // Obtiene fecha actual
-                tomorrow.setDate(tomorrow.getDate() + 1);       // Le suma 1 día (mañana)
-                fechaInput.min = tomorrow.toISOString().split('T')[0];  // Formato YYYY-MM-DD
-                fechaInput.addEventListener('input', validarFechaCita); // Valida mientras escribe
-            }
+        const animalIcons = { 'Perro':'bi-dog','Gato':'bi-cat','Conejo':'bi-bug','Hamster':'bi-bug','Pájaro':'bi-bug','Tortuga':'bi-bug','Pez':'bi-bug','Hurón':'bi-bug','Cobaya':'bi-bug','Iguana':'bi-bug','Otro':'bi-bug' };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('btnNuevaCita').onclick = () => mostrarModalNuevaCita();
+            cargarCitas(); inicializarEventos(); actualizarResumen();
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            const fi = document.getElementById('fechaCita');
+            const tom = new Date(); tom.setDate(tom.getDate() + 1);
+            fi.min = tom.toISOString().split('T')[0];
+            fi.addEventListener('input', validarFechaCita);
         });
 
-        // ============================================
-        // FUNCIONES DE GESTIÓN DE DATOS (localStorage)
-        // ============================================
-        function cargarCitas() {                              // Carga citas desde localStorage
-            console.log('Cargando citas desde localStorage');
-            const citasGuardadas = localStorage.getItem('citasVeterinarias');  // Obtiene datos guardados
-            if (citasGuardadas) {                             // Si hay datos guardados
-                citas = JSON.parse(citasGuardadas);           // Convierte de texto a objetos JavaScript
-                console.log('Citas cargadas:', citas.length);
-            } else {                                           // Si no hay datos guardados (primera vez)
-                citas = [                                      // Crea datos de ejemplo
-                    { id: 1, nombreMascota: "Pelusa", tipoMascota: "Gato", nombrePropietario: "Marco Luna", telefono: "457567567567", fecha: "2026-02-01", hora: "15:30", sintomas: "sin apetito, letárgico", estado: "abierta" },
-                    { id: 2, nombreMascota: "Max", tipoMascota: "Perro", nombrePropietario: "Ana García", telefono: "5551234567", fecha: "2026-02-03", hora: "10:00", sintomas: "tos constante", estado: "abierta" },
-                    { id: 3, nombreMascota: "Coco", tipoMascota: "Pájaro", nombrePropietario: "Luis Rodríguez", telefono: "5559876543", fecha: "2026-02-02", hora: "14:00", sintomas: "plumas caídas", estado: "terminada" },
-                    { id: 4, nombreMascota: "Bugs", tipoMascota: "Conejo", nombrePropietario: "Carlos Méndez", telefono: "5554567890", fecha: "2026-02-04", hora: "11:30", sintomas: "no come zanahorias", estado: "abierta" },
-                    { id: 5, nombreMascota: "Nemo", tipoMascota: "Pez", nombrePropietario: "Sofía López", telefono: "5553216549", fecha: "2026-02-01", hora: "16:00", sintomas: "nada de lado", estado: "anulada" },
-                    { id: 6, nombreMascota: "Rex", tipoMascota: "Perro", nombrePropietario: "Pedro Sánchez", telefono: "5557418529", fecha: "2026-02-05", hora: "09:00", sintomas: "cojea pata trasera", estado: "abierta" }
-                ];
-                guardarCitas();                                // Guarda los ejemplos en localStorage
-                console.log('Datos de ejemplo creados');
-            }
-            mostrarCitas();                                    // Muestra las citas en pantalla
+        function guardarCitas() { localStorage.setItem('citasVeterinarias', JSON.stringify(citas)); }
+
+        function cargarCitas() {
+            const g = localStorage.getItem('citasVeterinarias');
+            citas = g ? JSON.parse(g) : [
+                {id:1,nombreMascota:"Pelusa", tipoMascota:"Gato",   nombrePropietario:"Marco Luna",     telefono:"457567567567",fecha:"2026-02-01",hora:"15:30",sintomas:"sin apetito, letárgico", estado:"abierta"},
+                {id:2,nombreMascota:"Max",    tipoMascota:"Perro",  nombrePropietario:"Ana García",     telefono:"5551234567",  fecha:"2026-02-03",hora:"10:00",sintomas:"tos constante",          estado:"abierta"},
+                {id:3,nombreMascota:"Coco",   tipoMascota:"Pájaro", nombrePropietario:"Luis Rodríguez", telefono:"5559876543",  fecha:"2026-02-02",hora:"14:00",sintomas:"plumas caídas",          estado:"terminada"},
+                {id:4,nombreMascota:"Bugs",   tipoMascota:"Conejo", nombrePropietario:"Carlos Méndez",  telefono:"5554567890",  fecha:"2026-02-04",hora:"11:30",sintomas:"no come zanahorias",     estado:"abierta"},
+                {id:5,nombreMascota:"Nemo",   tipoMascota:"Pez",    nombrePropietario:"Sofía López",    telefono:"5553216549",  fecha:"2026-02-01",hora:"16:00",sintomas:"nada de lado",           estado:"anulada"},
+                {id:6,nombreMascota:"Rex",    tipoMascota:"Perro",  nombrePropietario:"Pedro Sánchez",  telefono:"5557418529",  fecha:"2026-02-05",hora:"09:00",sintomas:"cojea pata trasera",     estado:"abierta"}
+            ];
+            if (!g) guardarCitas();
+            mostrarCitas();
         }
 
-        function guardarCitas() {                              // Guarda citas en localStorage
-            localStorage.setItem('citasVeterinarias', JSON.stringify(citas));  // Convierte a texto y guarda
-            console.log('Citas guardadas en localStorage');
-        }
-
-        // ============================================
-        // CONFIGURACIÓN DE EVENTOS
-        // ============================================
         function inicializarEventos() {
-            console.log('Inicializando eventos secundarios');
-            
-            // Evento para el botón GUARDAR CITA
-            const btnGuardarCita = document.getElementById('btnGuardarCita');
-            if (btnGuardarCita) {
-                btnGuardarCita.addEventListener('click', function() {
-                    console.log('Botón Guardar Cita clickeado');
-                    guardarCita();                              // Llama a la función que guarda
-                });
-            }
-            
-            // Evento para el botón CONFIRMAR ELIMINAR
-            const btnConfirmarEliminar = document.getElementById('btnConfirmarEliminar');
-            if (btnConfirmarEliminar) {
-                btnConfirmarEliminar.addEventListener('click', confirmarEliminarCita);
-            }
-            
-            // Evento para abrir/cerrar el menú de FILTROS
-            const menuToggle = document.getElementById('menuToggle');
-            if (menuToggle) {
-                menuToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();                        // Evita que el clic se propague
-                    document.getElementById('dropdownFiltros').classList.toggle('show');  // Muestra/oculta
-                });
-            }
-            
-            // Evento para CERRAR DROPDOWNS al hacer clic fuera
-            document.addEventListener('click', function(e) {
-                // Cerrar dropdown de filtros
-                const dropdown = document.getElementById('dropdownFiltros');
-                const menuToggle = document.getElementById('menuToggle');
-                
-                if (dropdown && !dropdown.contains(e.target) && menuToggle && !menuToggle.contains(e.target)) {
-                    dropdown.classList.remove('show');          // Oculta el dropdown
-                }
-                
-                // Cerrar dropdowns de estado
-                if (!e.target.closest('.dropdown-estado')) {    // Si el clic NO fue en un dropdown de estado
-                    document.querySelectorAll('.dropdown-estado-content').forEach(dropdown => {
-                        dropdown.classList.remove('show');      // Oculta todos
-                    });
-                }
+            document.getElementById('btnGuardarCita').addEventListener('click', guardarCita);
+            document.getElementById('btnConfirmarEliminar').addEventListener('click', confirmarEliminarCita);
+            document.getElementById('menuToggle').addEventListener('click', e => { e.stopPropagation(); document.getElementById('dropdownFiltros').classList.toggle('show'); });
+            document.getElementById('fechaCita').addEventListener('change', generarHorariosDisponibles);
+            document.addEventListener('click', e => {
+                if (!document.getElementById('dropdownFiltros').contains(e.target) && !document.getElementById('menuToggle').contains(e.target))
+                    document.getElementById('dropdownFiltros').classList.remove('show');
+                if (!e.target.closest('.dropdown-estado'))
+                    document.querySelectorAll('.dropdown-estado-content').forEach(d => d.classList.remove('show'));
             });
-            
-            // Eventos para los BOTONES DE FILTRO
-            document.querySelectorAll('#dropdownFiltros .btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Quitar clase active de todos los botones
-                    document.querySelectorAll('#dropdownFiltros .btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');                // Poner active al clickeado
-                    
-                    filtroActual = this.getAttribute('data-estado');  // Obtiene el valor del filtro
-                    
-                    // Actualizar el texto del filtro activo visible
-                    const filtroActivo = document.getElementById('filtroActivo');
-                    const icono = this.querySelector('i').className;
-                    const texto = this.textContent.trim();
-                    filtroActivo.innerHTML = `<i class="${icono}"></i><span>${texto}</span>`;
-                    
-                    document.getElementById('dropdownFiltros').classList.remove('show');  // Cierra el menú
-                    mostrarCitas();                                // Vuelve a mostrar aplicando filtro
-                });
-            });
-            
-            // Evento para GENERAR HORARIOS cuando cambia la fecha
-            const fechaCita = document.getElementById('fechaCita');
-            if (fechaCita) {
-                fechaCita.addEventListener('change', generarHorariosDisponibles);
-            }
-            
-            // Validaciones en tiempo real mientras el usuario escribe
-            document.querySelectorAll('#formCita input, #formCita select, #formCita textarea').forEach(input => {
-                input.addEventListener('input', function() {
-                    validarCampo(this);                           // Valida el campo
-                    
-                    // Validación especial para teléfono (solo números)
-                    if (this.id === 'telefono' && this.value.trim() !== '' && !/^\d+$/.test(this.value.trim())) {
+            document.querySelectorAll('#dropdownFiltros .btn').forEach(btn => btn.addEventListener('click', function() {
+                document.querySelectorAll('#dropdownFiltros .btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                filtroActual = this.dataset.estado;
+                document.getElementById('filtroActivo').innerHTML = `<i class="${this.querySelector('i').className}"></i><span>${this.textContent.trim()}</span>`;
+                document.getElementById('dropdownFiltros').classList.remove('show');
+                mostrarCitas();
+            }));
+            document.querySelectorAll('#formCita input,#formCita select,#formCita textarea').forEach(i => {
+                i.addEventListener('input', function() {
+                    validarCampo(this);
+                    if (this.id === 'telefono' && this.value && !/^\d+$/.test(this.value)) {
                         this.classList.add('is-invalid');
-                        const errorElement = document.getElementById('error-telefono');
-                        if (errorElement) {
-                            errorElement.textContent = 'El teléfono debe contener solo números';
-                            errorElement.classList.add('show');
-                        }
+                        const e = document.getElementById('error-telefono');
+                        e.textContent = 'Solo números'; e.classList.add('show');
                     }
                 });
-                
-                input.addEventListener('change', function() {
-                    validarCampo(this);
-                });
+                i.addEventListener('change', function() { validarCampo(this); });
             });
         }
 
-        // ============================================
-        // FUNCIONES DE VALIDACIÓN
-        // ============================================
-        function validarCampo(elemento) {                        // Valida un campo individual
-            const errorId = 'error-' + elemento.id;              // ID del mensaje de error
-            const errorElement = document.getElementById(errorId);
-            
-            if (elemento.value.trim() === '' || (elemento.tagName === 'SELECT' && elemento.value === '')) {
-                elemento.classList.add('is-invalid');            // Borde rojo
-                if (errorElement) {
-                    errorElement.textContent = 'Este campo es requerido';
-                    errorElement.classList.add('show');          // Muestra mensaje
-                }
-            } else {
-                elemento.classList.remove('is-invalid');         // Quita borde rojo
-                if (errorElement) {
-                    errorElement.classList.remove('show');       // Oculta mensaje
-                }
-            }
+        function validarCampo(el) {
+            const err = document.getElementById('error-' + el.id);
+            const vacio = el.value.trim() === '' || (el.tagName === 'SELECT' && el.value === '');
+            el.classList.toggle('is-invalid', vacio);
+            if (err) { err.classList.toggle('show', vacio); if (vacio) err.textContent = 'Campo requerido'; }
         }
 
-        function validarFechaCita() {                            // Valida que la fecha sea futura
-            const fechaInput = document.getElementById('fechaCita');
-            if (!fechaInput || !fechaInput.value) return false;
-            
-            const fechaSeleccionada = new Date(fechaInput.value);
-            const fechaActual = new Date();
-            
-            fechaActual.setHours(0, 0, 0, 0);                    // Compara solo fechas (sin hora)
-            fechaSeleccionada.setHours(0, 0, 0, 0);
-            
-            if (fechaSeleccionada <= fechaActual) {
-                fechaInput.classList.add('is-invalid');
-                const errorElement = document.getElementById('error-fechaCita');
-                if (errorElement) {
-                    errorElement.textContent = 'La fecha debe ser posterior a la fecha actual';
-                    errorElement.classList.add('show');
-                }
-                return false;
-            } else {
-                fechaInput.classList.remove('is-invalid');
-                const errorElement = document.getElementById('error-fechaCita');
-                if (errorElement) {
-                    errorElement.classList.remove('show');
-                }
-                return true;
-            }
+        function validarFechaCita() {
+            const fi = document.getElementById('fechaCita');
+            if (!fi?.value) return false;
+            const sel = new Date(fi.value), hoy = new Date();
+            sel.setHours(0,0,0,0); hoy.setHours(0,0,0,0);
+            const err = document.getElementById('error-fechaCita'), invalida = sel <= hoy;
+            fi.classList.toggle('is-invalid', invalida);
+            if (err) { err.classList.toggle('show', invalida); if (invalida) err.textContent = 'Debe ser posterior a hoy'; }
+            return !invalida;
         }
 
-        // ============================================
-        // FUNCIONES DE MODALES
-        // ============================================
-        function mostrarModalNuevaCita() {                       // Abre modal para NUEVA cita
-            console.log('Mostrando modal nueva cita - FUNCIÓN EJECUTADA');
-            
-            citaAEditar = null;                                   // No hay cita en edición
-            
-            const modalLabel = document.getElementById('modalCitaLabel');
-            if (modalLabel) modalLabel.textContent = 'Agendar Nueva Cita';
-            
-            const formCita = document.getElementById('formCita');
-            if (formCita) formCita.reset();                      // Limpia el formulario
-            
-            const estadoContainer = document.getElementById('estadoContainer');
-            if (estadoContainer) estadoContainer.style.display = 'none';  // Oculta selector de estado
-            
-            limpiarValidaciones();                                 // Quita mensajes de error
-            
-            const citaIdInput = document.getElementById('citaId');
-            if (citaIdInput) citaIdInput.value = Date.now();      // Genera ID único (timestamp)
-            
-            const fechaInput = document.getElementById('fechaCita');
-            if (fechaInput) {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                fechaInput.value = tomorrow.toISOString().split('T')[0];  // Fecha por defecto: mañana
-            }
-            
-            generarHorariosDisponibles();                          // Genera lista de horas
-            
-            const modalElement = document.getElementById('modalCita');
-            if (modalElement) {
-                console.log('Abriendo modal de Bootstrap');
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();                                      // Muestra el modal
-            } else {
-                console.error('ERROR: Modal element no encontrado');
-            }
+        function mostrarModalNuevaCita() {
+            citaAEditar = null;
+            document.getElementById('modalCitaLabel').textContent = 'Agendar Nueva Cita';
+            document.getElementById('formCita').reset();
+            document.getElementById('estadoContainer').style.display = 'none';
+            document.getElementById('citaId').value = Date.now();
+            limpiarValidaciones();
+            const t = new Date(); t.setDate(t.getDate() + 1);
+            document.getElementById('fechaCita').value = t.toISOString().split('T')[0];
+            generarHorariosDisponibles();
+            new bootstrap.Modal(document.getElementById('modalCita')).show();
         }
 
-        function mostrarModalEditarCita(id) {                     // Abre modal para EDITAR cita
-            console.log('Mostrando modal editar cita:', id);
-            citaAEditar = citas.find(c => c.id == id);            // Busca la cita por ID
+        function mostrarModalEditarCita(id) {
+            citaAEditar = citas.find(c => c.id == id);
             if (!citaAEditar) return;
-            
-            const modalLabel = document.getElementById('modalCitaLabel');
-            if (modalLabel) modalLabel.textContent = 'Editar Cita';
-            
-            const estadoContainer = document.getElementById('estadoContainer');
-            if (estadoContainer) estadoContainer.style.display = 'block';  // Muestra selector de estado
-            
-            // Rellena todos los campos con los datos de la cita
+            document.getElementById('modalCitaLabel').textContent = 'Editar Cita';
+            document.getElementById('estadoContainer').style.display = 'block';
             document.getElementById('citaId').value = citaAEditar.id;
             document.getElementById('nombreMascota').value = citaAEditar.nombreMascota;
             document.getElementById('tipoMascota').value = citaAEditar.tipoMascota;
@@ -769,397 +778,138 @@
             document.getElementById('fechaCita').value = citaAEditar.fecha;
             document.getElementById('sintomas').value = citaAEditar.sintomas;
             document.getElementById('estadoCita').value = citaAEditar.estado;
-            
-            limpiarValidaciones();
-            generarHorariosDisponibles();
-            
-            setTimeout(() => {                                     // Espera a que se generen las horas
-                const horaCitaSelect = document.getElementById('horaCita');
-                if (horaCitaSelect) horaCitaSelect.value = citaAEditar.hora;  // Selecciona la hora guardada
-            }, 100);
-            
-            const modalElement = document.getElementById('modalCita');
-            if (modalElement) {
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();
-            }
+            limpiarValidaciones(); generarHorariosDisponibles();
+            setTimeout(() => document.getElementById('horaCita').value = citaAEditar.hora, 100);
+            new bootstrap.Modal(document.getElementById('modalCita')).show();
         }
 
-        function mostrarModalEliminarCita(id) {                   // Abre modal de confirmación para eliminar
-            console.log('Mostrando modal eliminar cita:', id);
-            citaAEliminar = id;                                    // Guarda el ID a eliminar
-            const modalElement = document.getElementById('modalConfirmarEliminar');
-            if (modalElement) {
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();
-            }
+        function mostrarModalEliminarCita(id) {
+            citaAEliminar = id;
+            new bootstrap.Modal(document.getElementById('modalConfirmarEliminar')).show();
         }
 
-        function confirmarEliminarCita() {                        // Ejecuta la eliminación (confirmada)
-            console.log('Confirmando eliminación:', citaAEliminar);
+        function confirmarEliminarCita() {
             if (!citaAEliminar) return;
-            
-            citas = citas.filter(c => c.id != citaAEliminar);     // Filtra: quita la cita con ese ID
-            
-            guardarCitas();                                        // Guarda cambios
-            mostrarCitas();                                        // Actualiza pantalla
-            actualizarResumen();                                   // Actualiza contadores
+            citas = citas.filter(c => c.id != citaAEliminar);
+            guardarCitas(); mostrarCitas(); actualizarResumen();
             mostrarMensajeExito('Cita eliminada correctamente');
-            
-            const modalElement = document.getElementById('modalConfirmarEliminar');
-            if (modalElement) {
-                const modal = bootstrap.Modal.getInstance(modalElement);
-                if (modal) modal.hide();                           // Cierra el modal
-            }
-            citaAEliminar = null;                                   // Limpia la variable
+            bootstrap.Modal.getInstance(document.getElementById('modalConfirmarEliminar')).hide();
+            citaAEliminar = null;
         }
 
-        // ============================================
-        // FUNCIÓN PARA GENERAR HORARIOS
-        // ============================================
         function generarHorariosDisponibles() {
-            const fechaSeleccionada = document.getElementById('fechaCita').value;
-            const selectHora = document.getElementById('horaCita');
-            
-            if (!selectHora) return;
-            
-            selectHora.innerHTML = '<option value="">Seleccione una hora</option>';  // Opción por defecto
-            
-            if (!fechaSeleccionada) {
-                selectHora.disabled = true;
-                return;
-            }
-            
-            const fechaActual = new Date();
-            const fechaCita = new Date(fechaSeleccionada);
-            fechaCita.setHours(0, 0, 0, 0);
-            fechaActual.setHours(0, 0, 0, 0);
-            
-            if (fechaCita <= fechaActual) {
-                selectHora.innerHTML = '<option value="">Fecha inválida - debe ser posterior a hoy</option>';
-                selectHora.disabled = true;
-                return;
-            }
-            
-            selectHora.disabled = false;
-            
-            // Genera horarios de 8:00 AM a 8:00 PM cada 30 minutos
-            for (let hora = 8; hora <= 20; hora++) {
-                for (let minuto of ['00', '30']) {
-                    if (hora === 20 && minuto === '30') continue; // No incluir 8:30 PM
-                    
-                    const hora24 = `${hora.toString().padStart(2, '0')}:${minuto}`;
-                    const hora12 = hora > 12 ? hora - 12 : hora;
-                    const amPm = hora >= 12 ? 'PM' : 'AM';
-                    const horaDisplay = `${hora12}:${minuto} ${amPm}`;
-                    
-                    // Verifica si el horario está ocupado por otra cita
-                    const horarioOcupado = citas.some(c => 
-                        !(citaAEditar && c.id === citaAEditar.id) &&  // Excluye la cita que se está editando
-                        c.fecha === fechaSeleccionada && 
-                        c.hora === hora24
-                    );
-                    
-                    const option = document.createElement('option');
-                    option.value = hora24;
-                    option.textContent = horaDisplay + (horarioOcupado ? ' (Ocupado)' : '');
-                    option.disabled = horarioOcupado;                  // Deshabilita si está ocupado
-                    selectHora.appendChild(option);
+            const fecha = document.getElementById('fechaCita').value;
+            const sel = document.getElementById('horaCita');
+            sel.innerHTML = '<option value="">Seleccione una hora</option>';
+            if (!fecha) { sel.disabled = true; return; }
+            const fc = new Date(fecha), hoy = new Date();
+            fc.setHours(0,0,0,0); hoy.setHours(0,0,0,0);
+            if (fc <= hoy) { sel.innerHTML = '<option value="">Fecha inválida</option>'; sel.disabled = true; return; }
+            sel.disabled = false;
+            for (let h = 8; h <= 20; h++) {
+                for (let m of ['00','30']) {
+                    if (h === 20 && m === '30') continue;
+                    const h24 = `${String(h).padStart(2,'0')}:${m}`;
+                    const ocupado = citas.some(c => !(citaAEditar && c.id === citaAEditar.id) && c.fecha === fecha && c.hora === h24);
+                    const opt = document.createElement('option');
+                    opt.value = h24;
+                    opt.textContent = `${h > 12 ? h-12 : h}:${m} ${h >= 12 ? 'PM':'AM'}` + (ocupado ? ' (Ocupado)' : '');
+                    opt.disabled = ocupado;
+                    sel.appendChild(opt);
                 }
             }
-            
-            // Si estamos editando, selecciona la hora original
-            if (citaAEditar && citaAEditar.fecha === fechaSeleccionada) {
-                selectHora.value = citaAEditar.hora;
-            }
+            if (citaAEditar?.fecha === fecha) sel.value = citaAEditar.hora;
         }
 
-        // ============================================
-        // FUNCIÓN PRINCIPAL: GUARDAR CITA
-        // ============================================
         function guardarCita() {
-            console.log('Guardando cita');
-            
-            if (!validarFormularioCompleto()) {                    // Valida campos requeridos
-                Swal.fire({                                         // Muestra alerta de error
-                    icon: 'warning',
-                    title: 'Campos incompletos',
-                    text: 'Por favor, completa todos los campos requeridos correctamente.',
-                    confirmButtonColor: '#FFC107',
-                    background: '#FFFDE7',
-                    color: '#5D4037',
-                    iconColor: '#FFC107'
-                });
-                return;
-            }
-            
-            // Obtiene valores de todos los campos
-            const id = parseInt(document.getElementById('citaId').value);
-            const nombreMascota = document.getElementById('nombreMascota').value.trim();
-            const tipoMascota = document.getElementById('tipoMascota').value;
-            const nombrePropietario = document.getElementById('nombrePropietario').value.trim();
-            const telefono = document.getElementById('telefono').value.trim();
-            const fechaCita = document.getElementById('fechaCita').value;
-            const horaCita = document.getElementById('horaCita').value;
-            const sintomas = document.getElementById('sintomas').value.trim();
-            const estado = citaAEditar ? document.getElementById('estadoCita').value : 'abierta';  // Si es nueva, estado="abierta"
-            
-            // Validar teléfono (solo números)
-            if (!/^\d+$/.test(telefono)) {
-                document.getElementById('telefono').classList.add('is-invalid');
-                const errorElement = document.getElementById('error-telefono');
-                if (errorElement) {
-                    errorElement.textContent = 'El teléfono debe contener solo números';
-                    errorElement.classList.add('show');
-                }
-                document.getElementById('telefono').focus();
-                return;
-            }
-            
-            // Validar fecha posterior a hoy
-            const fechaActual = new Date();
-            fechaActual.setHours(0, 0, 0, 0);
-            const fechaSeleccionada = new Date(fechaCita);
-            fechaSeleccionada.setHours(0, 0, 0, 0);
-            
-            if (fechaSeleccionada <= fechaActual) {
-                document.getElementById('fechaCita').classList.add('is-invalid');
-                const errorElement = document.getElementById('error-fechaCita');
-                if (errorElement) {
-                    errorElement.textContent = 'La fecha debe ser posterior a la fecha actual';
-                    errorElement.classList.add('show');
-                }
-                document.getElementById('fechaCita').focus();
-                return;
-            }
-            
-            // Validar horario (8 AM a 8 PM)
-            const [horas, minutos] = horaCita.split(':').map(Number);
-            if (horas < 8 || horas > 20 || (horas === 20 && minutos > 0)) {
-                document.getElementById('horaCita').classList.add('is-invalid');
-                const errorElement = document.getElementById('error-horaCita');
-                if (errorElement) {
-                    errorElement.textContent = 'El horario debe estar entre 8:00 AM y 8:00 PM';
-                    errorElement.classList.add('show');
-                }
-                document.getElementById('horaCita').focus();
-                return;
-            }
-            
-            // Validar que el horario no esté ocupado
-            const horarioOcupado = citas.some(c => 
-                !(citaAEditar && c.id === citaAEditar.id) && 
-                c.fecha === fechaCita && 
-                c.hora === horaCita
-            );
-            
-            if (horarioOcupado) {
-                document.getElementById('horaCita').classList.add('is-invalid');
-                const errorElement = document.getElementById('error-horaCita');
-                if (errorElement) {
-                    errorElement.textContent = 'Este horario ya está ocupado para la fecha seleccionada';
-                    errorElement.classList.add('show');
-                }
-                document.getElementById('horaCita').focus();
-                return;
-            }
-            
-            // Crear objeto con los datos
-            const nuevaCita = { 
-                id, 
-                nombreMascota, 
-                tipoMascota, 
-                nombrePropietario, 
-                telefono, 
-                fecha: fechaCita, 
-                hora: horaCita, 
-                sintomas, 
-                estado 
-            };
-            
-            if (citaAEditar) {                                     // Si es edición
-                const indice = citas.findIndex(c => c.id === citaAEditar.id);
-                if (indice !== -1) citas[indice] = nuevaCita;     // Reemplaza la cita existente
-                console.log('Cita actualizada:', nuevaCita);
-            } else {                                                // Si es nueva
-                citas.push(nuevaCita);                              // Agrega al final del array
-                console.log('Nueva cita agregada:', nuevaCita);
-            }
-            
-            guardarCitas();                                         // Guarda en localStorage
-            mostrarCitas();                                         // Actualiza pantalla
-            actualizarResumen();                                    // Actualiza contadores
-            
-            const modalElement = document.getElementById('modalCita');
-            if (modalElement) {
-                const modal = bootstrap.Modal.getInstance(modalElement);
-                if (modal) modal.hide();                            // Cierra el modal
-            }
-            
+            if (!validarFormularioCompleto()) { Swal.fire({icon:'warning',title:'Campos incompletos',text:'Completa todos los campos requeridos.',confirmButtonColor:'#FFC107',background:'#FFFDE7',color:'#5D4037',iconColor:'#FFC107'}); return; }
+            const g = id => document.getElementById(id);
+            const id = parseInt(g('citaId').value), telefono = g('telefono').value.trim(), fechaCita = g('fechaCita').value, horaCita = g('horaCita').value;
+            const nuevaCita = { id, nombreMascota:g('nombreMascota').value.trim(), tipoMascota:g('tipoMascota').value, nombrePropietario:g('nombrePropietario').value.trim(), telefono, fecha:fechaCita, hora:horaCita, sintomas:g('sintomas').value.trim(), estado: citaAEditar ? g('estadoCita').value : 'abierta' };
+
+            const errTel = g('error-telefono'), errFecha = g('error-fechaCita'), errHora = g('error-horaCita');
+            if (!/^\d+$/.test(telefono)) { g('telefono').classList.add('is-invalid'); errTel.textContent='Solo números'; errTel.classList.add('show'); g('telefono').focus(); return; }
+            const hoy = new Date(); hoy.setHours(0,0,0,0); const fs = new Date(fechaCita); fs.setHours(0,0,0,0);
+            if (fs <= hoy) { g('fechaCita').classList.add('is-invalid'); errFecha.textContent='Debe ser posterior a hoy'; errFecha.classList.add('show'); g('fechaCita').focus(); return; }
+            const [hh,mm] = horaCita.split(':').map(Number);
+            if (hh < 8 || hh > 20 || (hh===20 && mm>0)) { g('horaCita').classList.add('is-invalid'); errHora.textContent='Entre 8:00 AM y 8:00 PM'; errHora.classList.add('show'); g('horaCita').focus(); return; }
+            if (citas.some(c => !(citaAEditar&&c.id===citaAEditar.id) && c.fecha===fechaCita && c.hora===horaCita)) { g('horaCita').classList.add('is-invalid'); errHora.textContent='Horario ocupado'; errHora.classList.add('show'); g('horaCita').focus(); return; }
+
+            if (citaAEditar) { const i = citas.findIndex(c => c.id===citaAEditar.id); if (i!==-1) citas[i]=nuevaCita; }
+            else citas.push(nuevaCita);
+            guardarCitas(); mostrarCitas(); actualizarResumen();
+            bootstrap.Modal.getInstance(g('modalCita')).hide();
             mostrarMensajeExito(citaAEditar ? 'Cita actualizada correctamente' : 'Cita guardada correctamente');
         }
 
-        function validarFormularioCompleto() {                     // Valida todos los campos requeridos
-            let valido = true;
-            let primerCampoInvalido = null;
-            
+        function validarFormularioCompleto() {
             limpiarValidaciones();
-            
-            const camposRequeridos = [                             // Lista de campos a validar
-                {id: 'nombreMascota', nombre: 'nombre de la mascota'},
-                {id: 'tipoMascota', nombre: 'tipo de mascota'},
-                {id: 'nombrePropietario', nombre: 'nombre del propietario'},
-                {id: 'telefono', nombre: 'teléfono'},
-                {id: 'fechaCita', nombre: 'fecha de cita'},
-                {id: 'horaCita', nombre: 'hora de cita'},
-                {id: 'sintomas', nombre: 'síntomas'}
-            ];
-            
-            for (let campo of camposRequeridos) {
-                const elemento = document.getElementById(campo.id);
-                const errorElement = document.getElementById('error-' + campo.id);
-                
-                if (!elemento || !errorElement) continue;
-                
-                if (elemento.value.trim() === '' || (elemento.tagName === 'SELECT' && elemento.value === '')) {
-                    elemento.classList.add('is-invalid');
-                    errorElement.textContent = `El ${campo.nombre} es requerido`;
-                    errorElement.classList.add('show');
-                    valido = false;
-                    if (!primerCampoInvalido) primerCampoInvalido = elemento;
+            let primer = null;
+            const campos = ['nombreMascota','tipoMascota','nombrePropietario','telefono','fechaCita','horaCita','sintomas'];
+            campos.forEach(id => {
+                const el = document.getElementById(id), err = document.getElementById('error-'+id);
+                if (el.value.trim()==='' || (el.tagName==='SELECT' && el.value==='')) {
+                    el.classList.add('is-invalid'); err.textContent='Campo requerido'; err.classList.add('show');
+                    if (!primer) primer = el;
                 }
-            }
-            
-            if (!valido && primerCampoInvalido) {
-                primerCampoInvalido.focus();                        // Pone el foco en el primer campo inválido
-                return false;
-            }
-            
+            });
+            if (primer) { primer.focus(); return false; }
             return true;
         }
 
-        function limpiarValidaciones() {                           // Quita todas las validaciones
+        function limpiarValidaciones() {
             document.querySelectorAll('.is-invalid').forEach(e => e.classList.remove('is-invalid'));
             document.querySelectorAll('.validation-message').forEach(e => e.classList.remove('show'));
         }
 
-        // ============================================
-        // FUNCIONES PARA CAMBIAR ESTADO - ¡LAS QUE ARREGLAMOS!
-        // ============================================
-        function cambiarEstadoCita(id, nuevoEstado) {              // Cambia el estado de una cita
-            console.log('Cambiando estado de cita:', id, 'a', nuevoEstado);
-            
-            const citaIndex = citas.findIndex(c => c.id == id);    // Busca la cita por ID
-            if (citaIndex === -1) {
-                console.error('Cita no encontrada:', id);
-                return;
-            }
-            
-            citas[citaIndex].estado = nuevoEstado;                 // Actualiza el estado
-            
-            guardarCitas();                                         // Guarda cambios
-            mostrarCitas();                                         // Actualiza pantalla
-            actualizarResumen();                                    // Actualiza contadores
-            
-            let mensajeEstado = '';                                 // Mensaje según el nuevo estado
-            if (nuevoEstado === 'abierta') mensajeEstado = 'Cita marcada como Abierta';
-            else if (nuevoEstado === 'terminada') mensajeEstado = 'Cita marcada como Terminada';
-            else mensajeEstado = 'Cita marcada como Anulada';
-            
-            mostrarMensajeExito(mensajeEstado);
-            
-            const dropdown = document.getElementById('dropdownEstado-' + id);
-            if (dropdown) dropdown.classList.remove('show');       // Cierra el menú
+        function cambiarEstadoCita(id, nuevoEstado) {
+            const i = citas.findIndex(c => c.id == id);
+            if (i === -1) return;
+            citas[i].estado = nuevoEstado;
+            guardarCitas(); mostrarCitas(); actualizarResumen();
+            mostrarMensajeExito({abierta:'Cita marcada como Abierta',terminada:'Cita marcada como Terminada',anulada:'Cita marcada como Anulada'}[nuevoEstado]);
+            document.getElementById('dropdownEstado-'+id)?.classList.remove('show');
         }
 
-        function toggleEstadoDropdown(id) {                         // Abre/cierra el menú de estados
-            console.log('Toggle dropdown para cita:', id);
-            
-            // Cerrar todos los otros dropdowns
-            document.querySelectorAll('.dropdown-estado-content').forEach(d => {
-                if (d.id !== 'dropdownEstado-' + id) {
-                    d.classList.remove('show');
-                }
-            });
-            
-            // Toggle el dropdown actual
-            const dropdown = document.getElementById('dropdownEstado-' + id);
-            if (dropdown) {
-                dropdown.classList.toggle('show');                  // Si está abierto lo cierra, si está cerrado lo abre
-                console.log('Dropdown toggled:', dropdown.classList.contains('show') ? 'abierto' : 'cerrado');
-            } else {
-                console.error('Dropdown no encontrado para ID:', id);
-            }
+        function toggleEstadoDropdown(id) {
+            document.querySelectorAll('.dropdown-estado-content').forEach(d => { if (d.id!=='dropdownEstado-'+id) d.classList.remove('show'); });
+            document.getElementById('dropdownEstado-'+id)?.classList.toggle('show');
         }
 
-        // ============================================
-        // FUNCIÓN PARA MOSTRAR CITAS
-        // ============================================
         function mostrarCitas() {
-            const listaCitas = document.getElementById('listaCitas');
-            if (!listaCitas) return;
-            
-            // Aplicar filtro
-            let citasFiltradas = filtroActual === 'todas' ? citas : citas.filter(c => c.estado === filtroActual);
-            
-            // Ordenar por fecha y hora (más próximas primero)
-            citasFiltradas.sort((a, b) => new Date(a.fecha + 'T' + a.hora) - new Date(b.fecha + 'T' + b.hora));
-            
-            if (citasFiltradas.length === 0) {                      // Si no hay citas
-                let mensaje = '';
-                if (filtroActual === 'todas') {
-                    mensaje = 'No hay citas programadas. Comienza agregando una nueva cita.';
-                } else {
-                    const estadoTexto = filtroActual === 'abierta' ? 'Abiertas' : filtroActual === 'terminada' ? 'Terminadas' : 'Anuladas';
-                    mensaje = `No hay citas con estado "${estadoTexto}".`;
-                }
-                listaCitas.innerHTML = `<div class="empty-state"><i class="bi bi-calendar-x"></i><h4 class="title-font">No se encontraron citas</h4><p class="accent-font">${mensaje}</p></div>`;
+            const lista = document.getElementById('listaCitas');
+            if (!lista) return;
+            let cf = filtroActual==='todas' ? citas : citas.filter(c => c.estado===filtroActual);
+            cf.sort((a,b) => new Date(a.fecha+'T'+a.hora) - new Date(b.fecha+'T'+b.hora));
+            if (!cf.length) {
+                const msg = filtroActual==='todas' ? 'No hay citas. Agrega una nueva.' : `No hay citas "${filtroActual}".`;
+                lista.innerHTML = `<div class="empty-state"><i class="bi bi-calendar-x"></i><h4 class="title-font">Sin citas</h4><p class="accent-font">${msg}</p></div>`;
                 return;
             }
-            
-            let citasHTML = '';
-            
-            citasFiltradas.forEach(c => {                            // Recorre cada cita y genera HTML
-                // Formatear fecha
-                const fechaObj = new Date(c.fecha);
-                const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-                
-                // Formatear hora
-                const [horas, minutos] = c.hora.split(':');
-                const horaNum = parseInt(horas);
-                const horaFormato12 = horaNum > 12 ? horaNum - 12 : horaNum;
-                const amPm = horaNum >= 12 ? 'PM' : 'AM';
-                const horaFormateada = `${horaFormato12}:${minutos} ${amPm}`;
-                
-                const gifAnimal = animalGifs[c.tipoMascota] || animalGifs['Otro'];  // GIF según tipo
-                
-                // Determinar clases según estado
-                let estadoClase = '', estadoTexto = '', estadoBadge = '';
-                if (c.estado === 'abierta') { estadoClase = ''; estadoTexto = 'Abierta'; estadoBadge = 'estado-abierta'; }
-                else if (c.estado === 'terminada') { estadoClase = 'terminada'; estadoTexto = 'Terminada'; estadoBadge = 'estado-terminada'; }
-                else if (c.estado === 'anulada') { estadoClase = 'anulada'; estadoTexto = 'Anulada'; estadoBadge = 'estado-anulada'; }
-                
-                const iconoAnimal = animalIcons[c.tipoMascota] || 'bi-bug';
-                
-                // Generar HTML de la tarjeta
-                citasHTML += `
-                    <div class="card cita-card ${estadoClase}">
+            lista.innerHTML = cf.map(c => {
+                const fecha = new Date(c.fecha).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+                const [hh,mm] = c.hora.split(':'); const h = parseInt(hh);
+                const hora = `${h>12?h-12:h}:${mm} ${h>=12?'PM':'AM'}`;
+                const gif = animalGifs[c.tipoMascota]||animalGifs['Otro'];
+                const icono = animalIcons[c.tipoMascota]||'bi-bug';
+                const estadoTexto = c.estado==='abierta'?'Abierta':c.estado==='terminada'?'Terminada':'Anulada';
+                return `
+                    <div class="card cita-card ${c.estado==='abierta'?'':c.estado}">
                         <div class="card-body">
                             <div class="cita-header">
-                                <img src="${gifAnimal}" alt="${c.tipoMascota}" class="animal-gif-small">
+                                <img src="${gif}" alt="${c.tipoMascota}" class="animal-gif-small">
                                 <div class="cita-info">
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div>
-                                            <h5 class="card-title mb-1 title-font"><i class="bi ${iconoAnimal}" style="color: var(--secondary-color);"></i> ${c.nombreMascota} - ${c.tipoMascota}</h5>
+                                            <h5 class="card-title mb-1 title-font"><i class="bi ${icono}" style="color: var(--secondary-color);"></i> ${c.nombreMascota} - ${c.tipoMascota}</h5>
                                             <p class="text-muted mb-1 accent-font"><i class="bi bi-person" style="color: var(--primary-color);"></i> Propietario: ${c.nombrePropietario}</p>
                                         </div>
-                                        <!-- BOTÓN DE ESTADO QUE ARREGLAMOS -->
                                         <div class="dropdown-estado">
-                                            <button class="estado-badge ${estadoBadge} accent-font" onclick="toggleEstadoDropdown(${c.id})">${estadoTexto} <i class="bi bi-chevron-down"></i></button>
+                                            <button class="estado-badge estado-${c.estado} accent-font" onclick="toggleEstadoDropdown(${c.id})">${estadoTexto} <i class="bi bi-chevron-down"></i></button>
                                             <div class="dropdown-estado-content" id="dropdownEstado-${c.id}">
-                                                <button class="btn-abierta accent-font" onclick="cambiarEstadoCita(${c.id}, 'abierta')"><i class="bi bi-clock me-2" style="color: var(--primary-color);"></i>Marcar como Abierta</button>
+                                                <button class="btn-abierta accent-font"   onclick="cambiarEstadoCita(${c.id}, 'abierta')"><i class="bi bi-clock me-2" style="color: var(--primary-color);"></i>Marcar como Abierta</button>
                                                 <button class="btn-terminada accent-font" onclick="cambiarEstadoCita(${c.id}, 'terminada')"><i class="bi bi-check-circle me-2" style="color: var(--success-color);"></i>Marcar como Terminada</button>
-                                                <button class="btn-anulada accent-font" onclick="cambiarEstadoCita(${c.id}, 'anulada')"><i class="bi bi-x-circle me-2" style="color: var(--danger-color);"></i>Marcar como Anulada</button>
+                                                <button class="btn-anulada accent-font"   onclick="cambiarEstadoCita(${c.id}, 'anulada')"><i class="bi bi-x-circle me-2" style="color: var(--danger-color);"></i>Marcar como Anulada</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1167,8 +917,8 @@
                             </div>
                             <div class="row mb-2"><div class="col-md-12"><p class="mb-1 accent-font"><i class="bi bi-telephone" style="color: var(--primary-color);"></i> Teléfono: ${c.telefono}</p></div></div>
                             <div class="row mb-2">
-                                <div class="col-md-6"><p class="mb-1 accent-font"><i class="bi bi-calendar-event" style="color: var(--primary-color);"></i> Fecha: ${fechaFormateada}</p></div>
-                                <div class="col-md-6"><p class="mb-1 accent-font"><i class="bi bi-clock" style="color: var(--primary-color);"></i> Hora: ${horaFormateada}</p></div>
+                                <div class="col-md-6"><p class="mb-1 accent-font"><i class="bi bi-calendar-event" style="color: var(--primary-color);"></i> Fecha: ${fecha}</p></div>
+                                <div class="col-md-6"><p class="mb-1 accent-font"><i class="bi bi-clock" style="color: var(--primary-color);"></i> Hora: ${hora}</p></div>
                             </div>
                             <div class="row mb-3"><div class="col-md-12"><p class="mb-1 accent-font"><i class="bi bi-info-circle" style="color: var(--primary-color);"></i> Síntomas: ${c.sintomas}</p></div></div>
                             <div class="card-footer-buttons"><div class="d-flex justify-content-end">
@@ -1176,57 +926,25 @@
                                 <button class="btn btn-sm btn-outline-danger accent-font" onclick="mostrarModalEliminarCita(${c.id})"><i class="bi bi-trash" style="color: var(--danger-color);"></i> Eliminar</button>
                             </div></div>
                         </div>
-                    </div>
-                `;
-            });
-            
-            listaCitas.innerHTML = citasHTML;                       // Inserta todo el HTML en el contenedor
+                    </div>`;
+            }).join('');
         }
 
-        // ============================================
-        // FUNCIÓN PARA ACTUALIZAR RESUMEN
-        // ============================================
         function actualizarResumen() {
-            const total = citas.length;
-            const abiertas = citas.filter(c => c.estado === 'abierta').length;
-            const terminadas = citas.filter(c => c.estado === 'terminada').length;
-            const anuladas = citas.filter(c => c.estado === 'anulada').length;
-            
-            const totalElement = document.getElementById('totalCitas');
-            const abiertasElement = document.getElementById('abiertasCitas');
-            const terminadasElement = document.getElementById('terminadasCitas');
-            const anuladasElement = document.getElementById('anuladasCitas');
-            
-            if (totalElement) totalElement.textContent = total;
-            if (abiertasElement) abiertasElement.textContent = abiertas;
-            if (terminadasElement) terminadasElement.textContent = terminadas;
-            if (anuladasElement) anuladasElement.textContent = anuladas;
+            document.getElementById('totalCitas').textContent     = citas.length;
+            document.getElementById('abiertasCitas').textContent  = citas.filter(c => c.estado === 'abierta').length;
+            document.getElementById('terminadasCitas').textContent = citas.filter(c => c.estado === 'terminada').length;
+            document.getElementById('anuladasCitas').textContent  = citas.filter(c => c.estado === 'anulada').length;
         }
 
-        // ============================================
-        // FUNCIÓN PARA MOSTRAR MENSAJES
-        // ============================================
-        function mostrarMensajeExito(mensaje) {                     // Muestra notificación con SweetAlert
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: mensaje,
-                timer: 2000,                                         // Desaparece después de 2 segundos
-                showConfirmButton: false,
-                background: '#FFFDE7',
-                color: '#5D4037',
-                iconColor: '#FFC107'
-            });
+        function mostrarMensajeExito(mensaje) {
+            Swal.fire({ icon: 'success', title: '¡Éxito!', text: mensaje, timer: 2000, showConfirmButton: false, background: '#FFFDE7', color: '#5D4037', iconColor: '#FFC107' });
         }
 
-        // ============================================
-        // EXPORTAR FUNCIONES AL ÁMBITO GLOBAL - ¡CRÍTICO!
-        // ============================================
-        // Esto hace que las funciones sean accesibles desde los onclick en el HTML
-        window.mostrarModalEditarCita = mostrarModalEditarCita;
+        window.mostrarModalEditarCita  = mostrarModalEditarCita;
         window.mostrarModalEliminarCita = mostrarModalEliminarCita;
-        window.toggleEstadoDropdown = toggleEstadoDropdown;         // ¡LA QUE ARREGLAMOS!
-        window.cambiarEstadoCita = cambiarEstadoCita;               // ¡LA QUE ARREGLAMOS!
+        window.toggleEstadoDropdown    = toggleEstadoDropdown;
+        window.cambiarEstadoCita       = cambiarEstadoCita;
     </script>
 </body>
 </html>
